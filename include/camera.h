@@ -15,13 +15,12 @@ public:
     float near_distance;
     int image_width, image_height;
     std::string image_name;
-    Vec3f right; //
+    Vec3f right; // calculate this after initialization
     void calculate_right();
 
 
     std::vector<Ray> generate_rays();
 };
-// TODO: Vec3f right;
 
 
 #endif

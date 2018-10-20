@@ -1,9 +1,15 @@
-#include "../include/camera.h"
+#include "camera.h"
+#include "parser.h"
+
 #include <iostream>
-#include "../utils/parser.h"
 
 int main(int argc, char** argv)
 {
+	if (argc < 2) {
+		std::cerr << "Usage: ./main <scene_file>" << std::endl;
+		return 1;
+	}
+
     parser::Scene sc;
     sc.loadFromXml(argv[1]);
 
