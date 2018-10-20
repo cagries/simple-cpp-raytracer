@@ -1,4 +1,4 @@
-#include "../include/geometry.h"
+#include "geometry.h"
 
 
 Vec3f::Vec3f(float x, float y, float z)
@@ -29,6 +29,7 @@ Vec3f Vec3f::operator*=(const Vec3f& rhs) {
     x *= rhs.x;
     y *= rhs.y;
     z *= rhs.z;
+	return *this;
 }
 
 Vec3f operator+(Vec3f lhs, Vec3f rhs) {

@@ -1,4 +1,6 @@
-#include "../include/camera.h"
+#include "camera.h"
+#include "geometry.h"
+
 #include <vector>
 
 void Camera::calculate_right()
