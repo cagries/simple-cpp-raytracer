@@ -5,22 +5,25 @@
 #include <string>
 #include <vector>
 
+class ImagePlane {
+public:
+    Vec4f lrtb;
+    int width, height;
+    std::string image_name;
+    float distance;
+
+    ImagePlane(Vec4f, int, int, std::string, float);
+};
 
 class Camera {
 public:
-    Vec3f position;
-    Vec3f gaze;
-    Vec3f up;
-    Vec4f near_plane;
-    float near_distance;
-    int image_width, image_height;
-    std::string image_name;
-    Vec3f right; // calculate this after initialization
-    void calculate_right();
+    Camera(Vec3f pos, Vec3f gaze, Vec3f up, ImagePlane plane);
+    Ray generate_ray(int i, int j);
 
-
-    std::vector<Ray> generate_rays();
+    Vec3f position, gaze, up; // Provided as input
+    Vec3f right; // Calculated using other variables, inside the constructor
+    ImagePlane plane;
 };
 
 
-#endif
+#endif // CAMERA_H

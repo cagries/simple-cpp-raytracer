@@ -5,7 +5,9 @@ ODIR = build
 
 CFLAGS = -Wall -std=c++11 -Werror -g -I$(IDIR)
 
-OBJS = geometry.o camera.o parser.o tinyxml2.o ppm.o
+LDFLAGS = -lm
+
+OBJS = geometry.o camera.o parser.o tinyxml2.o ppm.o sphere.o triangle.o
 
 INCLUDES = geometry.h parser.h surface.h light.h material.h ppm.h tinyxml2.h
 
@@ -16,7 +18,7 @@ TARGETS = main example
 
 # The main ray tracer program
 main:	$(patsubst %, $(ODIR)/%, $(OBJS) main.o)
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
 
 # The example program given in the student pack
 example:	$(patsubst %, $(ODIR)/%, $(OBJS) example.o)
@@ -44,6 +46,12 @@ $(ODIR)/camera.o: $(IDIR)/camera.h $(IDIR)/geometry.h
 
 $(ODIR)/example.o:	$(IDIR)/parser.h $(IDIR)/ppm.h
 	$(CC) -c -o $@ $(SDIR)/example.cpp $(CFLAGS)
+
+$(ODIR)/sphere.o:	 $(IDIR)/surface.h
+	$(CC) -c -o $@ $(SDIR)/sphere.cpp $(CFLAGS)
+
+$(ODIR)/triangle.o:	 $(IDIR)/surface.h
+	$(CC) -c -o $@ $(SDIR)/triangle.cpp $(CFLAGS)
 
 clean:
 	@rm -f $(TARGETS) main $(ODIR)/*

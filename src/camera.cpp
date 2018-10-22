@@ -2,27 +2,33 @@
 #include "geometry.h"
 
 #include <vector>
+#include <string>
 
-void Camera::calculate_right()
+/**
+ * ImagePlane constructor.
+ */
+ImagePlane::ImagePlane(Vec4f plane, int width, int height, std::string name, float distance)
+    : lrtb{plane}, width{width}, height{height}, image_name{name}, distance{distance}
+{}
+
+
+/**
+ * Constructor for camera.
+ */
+Camera::Camera(Vec3f pos, Vec3f gaze, Vec3f up, ImagePlane plane)
+    : position{pos}, gaze{gaze}, up{up}, plane{plane}
 {
     right = cross(gaze, up);
 }
 
-std::vector<Ray> Camera::generate_rays()
+Ray Camera::generate_ray(int i, int j)
 {
-    std::vector<Ray> rays;
-    for (int i = 0; i < image_width; i++) {
-        for (int j = 0; j < image_height; j++) {
-            double u = near_plane.x + (near_plane.y - near_plane.x) * (i + 0.5) / image_width;
-            double v = near_plane.z + (near_plane.w - near_plane.z) * (i + 0.5) / image_height;
+    double u = plane.lrtb.x + (plane.lrtb.y - plane.lrtb.x) * (i + 0.5) / plane.width;
+    double v = plane.lrtb.z + (plane.lrtb.w - plane.lrtb.z) * (j + 0.5) / plane.height;
 
-            Ray r;
-            r.d = near_distance * gaze + u * up + v * right;
-            r.e = position;
-            rays.push_back(r);
-        }
-    }
-
-    return rays;
+    Ray r;
+    r.d = plane.distance * gaze + u * up + v * right;
+    r.e = position;
+    return r;
 }
 

@@ -4,11 +4,11 @@
 #include <string>
 #include <vector>
 
-#include "../include/geometry.h"
-#include "../include/camera.h"
-#include "../include/light.h"
-#include "../include/material.h"
-#include "../include/surface.h"
+#include "geometry.h"
+#include "camera.h"
+#include "light.h"
+#include "material.h"
+#include "surface.h"
 
 namespace parser
 {

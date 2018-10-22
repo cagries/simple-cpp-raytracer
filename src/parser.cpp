@@ -1,5 +1,7 @@
 #include "parser.h"
 #include "tinyxml2.h"
+#include "surface.h"
+
 #include <sstream>
 #include <stdexcept>
 #include <iostream>
@@ -8,6 +10,8 @@ void parser::Scene::loadFromXml(const std::string& filepath)
 {
     tinyxml2::XMLDocument file;
     std::stringstream stream;
+
+    int material_id;
 
     auto res = file.LoadFile(filepath.c_str());
     if (res)
@@ -60,7 +64,13 @@ void parser::Scene::loadFromXml(const std::string& filepath)
     //Get Cameras
     element = root->FirstChildElement("Cameras");
     element = element->FirstChildElement("Camera");
-    Camera camera;
+
+    Vec3f position, gaze, up;
+    Vec4f near_plane;
+    float distance;
+    std::string name;
+    int width, height;
+
     while (element)
     {
         auto child = element->FirstChildElement("Position");
@@ -78,15 +88,18 @@ void parser::Scene::loadFromXml(const std::string& filepath)
         child = element->FirstChildElement("ImageName");
         stream << child->GetText() << std::endl;
 
-        stream >> camera.position.x >> camera.position.y >> camera.position.z;
-        stream >> camera.gaze.x >> camera.gaze.y >> camera.gaze.z;
-        stream >> camera.up.x >> camera.up.y >> camera.up.z;
-        stream >> camera.near_plane.x >> camera.near_plane.y >> camera.near_plane.z >> camera.near_plane.w;
-        stream >> camera.near_distance;
-        stream >> camera.image_width >> camera.image_height;
-        stream >> camera.image_name;
+        stream >> position.x >> position.y >> position.z;
+        stream >> gaze.x >> gaze.y >> gaze.z;
+        stream >> up.x >> up.y >> up.z;
+        stream >> near_plane.x >> near_plane.y >> near_plane.z >> near_plane.w;
+        stream >> distance;
+        stream >> width >> height;
+        stream >> name;
 
-        cameras.push_back(camera);
+        cameras.push_back({
+                position, gaze, up, 
+                {near_plane, width, height, name, distance} // image plane
+                });
         element = element->NextSiblingElement("Camera");
     }
 
@@ -152,7 +165,10 @@ void parser::Scene::loadFromXml(const std::string& filepath)
     //Get Meshes
     element = root->FirstChildElement("Objects");
     element = element->FirstChildElement("Mesh");
+
     Mesh mesh;
+    int v0_id, v1_id, v2_id;
+
     while (element)
     {
         child = element->FirstChildElement("Material");
@@ -161,11 +177,14 @@ void parser::Scene::loadFromXml(const std::string& filepath)
 
         child = element->FirstChildElement("Faces");
         stream << child->GetText() << std::endl;
-        Face face;
-        while (!(stream >> face.v0_id).eof())
+
+        while (!(stream >> v0_id).eof())
         {
-            stream >> face.v1_id >> face.v2_id;
-            mesh.faces.push_back(face);
+            stream >> v1_id >> v2_id;
+            mesh.faces.push_back({
+                    &vertex_data[v0_id],
+                    &vertex_data[v1_id],
+                    &vertex_data[v2_id]});
         }
         stream.clear();
 
@@ -178,40 +197,49 @@ void parser::Scene::loadFromXml(const std::string& filepath)
     //Get Triangles
     element = root->FirstChildElement("Objects");
     element = element->FirstChildElement("Triangle");
-    Triangle triangle;
+
     while (element)
     {
         child = element->FirstChildElement("Material");
         stream << child->GetText() << std::endl;
-        stream >> triangle.material_id;
+        stream >> material_id;
+
 
         child = element->FirstChildElement("Indices");
         stream << child->GetText() << std::endl;
-        stream >> triangle.indices.v0_id >> triangle.indices.v1_id >> triangle.indices.v2_id;
+        stream >> v0_id >> v1_id >> v2_id;
 
-        triangles.push_back(triangle);
+        triangles.push_back({&materials[material_id],
+                &vertex_data[v0_id], &vertex_data[v1_id], &vertex_data[v2_id]
+                });
         element = element->NextSiblingElement("Triangle");
     }
 
     //Get Spheres
     element = root->FirstChildElement("Objects");
     element = element->FirstChildElement("Sphere");
-    Sphere sphere;
+
+    int center_vertex_id;
+    float radius;
+
     while (element)
     {
         child = element->FirstChildElement("Material");
         stream << child->GetText() << std::endl;
-        stream >> sphere.material_id;
+
+        stream >> material_id;
 
         child = element->FirstChildElement("Center");
         stream << child->GetText() << std::endl;
-        stream >> sphere.center_vertex_id;
+
+        stream >> center_vertex_id;
 
         child = element->FirstChildElement("Radius");
         stream << child->GetText() << std::endl;
-        stream >> sphere.radius;
+        stream >> radius;
 
-        spheres.push_back(sphere);
+        spheres.push_back({&materials[material_id], vertex_data[center_vertex_id], radius});
         element = element->NextSiblingElement("Sphere");
     }
+
 }

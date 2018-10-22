@@ -2,35 +2,53 @@
 #define SURFACE_H
 
 #include "geometry.h"
+#include "material.h"
+
 #include <vector>
 
+class Surface;
+
+struct HitRecord {
+    float t;
+    Surface* s;
+};
+
+
 struct Surface {
-    int material_id;
-    virtual Vec3f normal() = 0;
+    Surface(Material *m) : material{m} {}
+
+    virtual bool hit(Ray r, float dist_min, float dist_max, HitRecord rec) = 0;
+    virtual ~Surface() = default;
+
+    Material *material;
 };
 
 
 struct Face {
-    int v0_id, v1_id, v2_id;
+    Vec3f *v0, *v1, *v2;
 };
 
 struct Triangle : Surface {
-    Face indices;
 
-    Vec3f normal() {
-        // TODO: do htis
-        return {0, 0, 0};
-    }
+    Triangle(Material*, Vec3f*, Vec3f*, Vec3f*);
+
+    // TODO: Implement this afterwards
+    bool hit(Ray r, float dist_min, float dist_max, HitRecord rec);
+
+    ~Triangle() = default;
+
+    Face indices;
 };
 
-struct Sphere : Surface {
-    int center_vertex_id;
-    int radius;
 
-    Vec3f normal() {
-        // TODO: Do this also
-        return {1,1,1};
-    }
+struct Sphere : Surface {
+
+    Sphere(Material*, Vec3f, float);
+    bool hit(Ray r, float dist_min, float dist_max, HitRecord rec);
+    ~Sphere() = default;
+
+    Vec3f center;
+    float radius;
 };
 
 
@@ -40,5 +58,6 @@ struct Mesh
     std::vector<Face> faces;
 };
 
-#endif //surface.h
 
+
+#endif // surface.h
