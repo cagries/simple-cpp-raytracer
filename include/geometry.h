@@ -11,9 +11,6 @@ struct Vec3f {
 
     Vec3f operator-=(const Vec3f& rhs);
 
-    // Dot product 
-    Vec3f operator*=(const Vec3f& rhs);
-
     Vec3f(const Vec3f& rhs);
     Vec3f(float x =0, float y =0, float z =0);
 };
@@ -24,9 +21,10 @@ Vec3f operator-(Vec3f lhs, Vec3f rhs);
 
 Vec3f operator-(Vec3f v);
 
-Vec3f operator*(Vec3f lhs, Vec3f rhs);
+float operator*(Vec3f lhs, Vec3f rhs);
 
 Vec3f operator*(float t, Vec3f rhs);
+
 
 
 struct Ray {
@@ -44,5 +42,6 @@ struct Vec4f {
 };
 
 Vec3f cross(Vec3f a, Vec3f b);
+
 
 #endif // geometry.h
