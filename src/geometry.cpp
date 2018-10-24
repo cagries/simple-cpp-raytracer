@@ -72,10 +72,13 @@ Vec3f cross(Vec3f a, Vec3f b) {
 }
 
 Vec3f Vec3f::normalize() {
-    float size = sqrt(x * x + y * y + z * z);
+    float size = norm();
     return {x / size, y / size, z / size};
 }
 
+float Vec3f::norm() {
+    return sqrt(x * x + y * y + z * z);
+}
 
 Vec3f Vec3f::times(const Vec3f& rhs) {
     return {x * rhs.x, y * rhs.y, z * rhs.z};

@@ -15,6 +15,7 @@ struct Vec3f {
     Vec3f(float x =0, float y =0, float z =0);
     Vec3f normalize();
     
+    float norm();
     Vec3f times(const Vec3f& rhs);
 };
 

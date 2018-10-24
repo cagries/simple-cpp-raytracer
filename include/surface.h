@@ -20,7 +20,7 @@ struct Surface {
     Surface(Material *m) : material{m} {}
 
     virtual bool hit(Ray, HitRecord*) = 0;
-
+    
     virtual ~Surface() = default;
 
     Material *material;
