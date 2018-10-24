@@ -17,6 +17,7 @@ Vec3f Vec3f::operator+=(const Vec3f& rhs) {
     z += rhs.z;
     return *this;
 }
+
 Vec3f Vec3f::operator-=(const Vec3f& rhs) {
     x -= rhs.x;
     y -= rhs.y;
@@ -31,6 +32,7 @@ Vec3f operator+(Vec3f lhs, Vec3f rhs) {
 Vec3f operator-(Vec3f lhs, Vec3f rhs) {
     return lhs -= rhs;
 }
+
 Vec3f operator-(Vec3f v) {
     return {-v.x, -v.y, -v.z};
 }
@@ -43,15 +45,24 @@ Vec3f operator*(float t, Vec3f rhs) {
     return rhs;
 }
 
+/**
+ * Dot product.
+ */
 float operator*(Vec3f lhs, Vec3f rhs) {
-    return (lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * lhs.z);
+    return (lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z);
 }
 
+/**
+ * The ray equation.
+ */
 Vec3f Ray::operator()(int t) {
         Vec3f v = t * d;
-        return { e.x + v.x, e.y + v.y, e.z + v.z} ;
+        return {e.x + v.x, e.y + v.y, e.z + v.z} ;
 }
 
+/**
+ * Cross product of two three dimensional vectors.
+ */
 Vec3f cross(Vec3f a, Vec3f b) {
     return {
         a.y * b.z - a.z * b.y,

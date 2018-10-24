@@ -7,7 +7,8 @@ CFLAGS = -Wall -std=c++11 -Werror -g -I$(IDIR)
 
 LDFLAGS = -lm
 
-OBJS = geometry.o camera.o parser.o tinyxml2.o ppm.o sphere.o triangle.o
+OBJS = geometry.o camera.o parser.o tinyxml2.o ppm.o sphere.o triangle.o light.o
+
 
 INCLUDES = geometry.h parser.h surface.h light.h material.h ppm.h tinyxml2.h
 
@@ -24,10 +25,16 @@ main:	$(patsubst %, $(ODIR)/%, $(OBJS) main.o)
 example:	$(patsubst %, $(ODIR)/%, $(OBJS) example.o)
 	$(CC) -o $@ $^ $(CFLAGS)
 
+# Another example program
+tracer:	$(patsubst %, $(ODIR)/%, $(OBJS) tracer.o)
+	$(CC) -o $@ $^ $(CFLAGS)
 
 # Recipes for object files
 $(ODIR)/main.o:	$(patsubst %, $(IDIR)/%, parser.h camera.h ppm.h)
 	$(CC) -c -o $@ $(SDIR)/main.cpp $(CFLAGS)
+
+$(ODIR)/tracer.o:	$(patsubst %, $(IDIR)/%, parser.h camera.h ppm.h)
+	$(CC) -c -o $@ $(SDIR)/tracer.cpp $(CFLAGS)
 
 $(ODIR)/ppm.o:	$(IDIR)/ppm.h
 	$(CC) -c -o $@ $(SDIR)/ppm.cpp $(CFLAGS)
@@ -53,5 +60,8 @@ $(ODIR)/sphere.o:	 $(IDIR)/surface.h
 $(ODIR)/triangle.o:	 $(IDIR)/surface.h
 	$(CC) -c -o $@ $(SDIR)/triangle.cpp $(CFLAGS)
 
+$(ODIR)/light.o:	 $(IDIR)/light.h $(IDIR)/geometry.h
+	$(CC) -c -o $@ $(SDIR)/light.cpp $(CFLAGS)
+
 clean:
-	@rm -f $(TARGETS) main $(ODIR)/*
+	@rm -f $(TARGETS) main example tracer $(ODIR)/*

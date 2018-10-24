@@ -91,7 +91,7 @@ void parser::Scene::loadFromXml(const std::string& filepath)
         stream >> position.x >> position.y >> position.z;
         stream >> gaze.x >> gaze.y >> gaze.z;
         stream >> up.x >> up.y >> up.z;
-        stream >> near_plane.x >> near_plane.y >> near_plane.z >> near_plane.w;
+        stream >> near_plane.l >> near_plane.r >> near_plane.b >> near_plane.t;
         stream >> distance;
         stream >> width >> height;
         stream >> name;
@@ -182,9 +182,9 @@ void parser::Scene::loadFromXml(const std::string& filepath)
         {
             stream >> v1_id >> v2_id;
             mesh.faces.push_back({
-                    &vertex_data[v0_id],
-                    &vertex_data[v1_id],
-                    &vertex_data[v2_id]});
+                    &vertex_data[v0_id-1],
+                    &vertex_data[v1_id-1],
+                    &vertex_data[v2_id-1]});
         }
         stream.clear();
 
@@ -209,8 +209,8 @@ void parser::Scene::loadFromXml(const std::string& filepath)
         stream << child->GetText() << std::endl;
         stream >> v0_id >> v1_id >> v2_id;
 
-        triangles.push_back({&materials[material_id],
-                &vertex_data[v0_id], &vertex_data[v1_id], &vertex_data[v2_id]
+        triangles.push_back({&materials[material_id-1],
+                &vertex_data[v0_id-1], &vertex_data[v1_id-1], &vertex_data[v2_id-1]
                 });
         element = element->NextSiblingElement("Triangle");
     }
@@ -238,7 +238,7 @@ void parser::Scene::loadFromXml(const std::string& filepath)
         stream << child->GetText() << std::endl;
         stream >> radius;
 
-        spheres.push_back({&materials[material_id], vertex_data[center_vertex_id], radius});
+        spheres.push_back({&materials[material_id-1], vertex_data[center_vertex_id-1], radius});
         element = element->NextSiblingElement("Sphere");
     }
 

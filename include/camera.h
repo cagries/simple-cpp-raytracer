@@ -7,7 +7,7 @@
 
 class ImagePlane {
 public:
-    Vec4f lrtb;
+    Vec4f bounds;
     int width, height;
     std::string image_name;
     float distance;

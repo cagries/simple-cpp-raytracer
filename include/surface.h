@@ -17,7 +17,8 @@ struct HitRecord {
 struct Surface {
     Surface(Material *m) : material{m} {}
 
-    virtual bool hit(Ray r, float dist_min, float dist_max, HitRecord rec) = 0;
+    virtual bool hit(Ray, HitRecord*) = 0;
+
     virtual ~Surface() = default;
 
     Material *material;
@@ -33,7 +34,7 @@ struct Triangle : Surface {
     Triangle(Material*, Vec3f*, Vec3f*, Vec3f*);
 
     // TODO: Implement this afterwards
-    bool hit(Ray r, float dist_min, float dist_max, HitRecord rec);
+    bool hit(Ray r, HitRecord*);
 
     ~Triangle() = default;
 
@@ -44,11 +45,13 @@ struct Triangle : Surface {
 struct Sphere : Surface {
 
     Sphere(Material*, Vec3f, float);
-    bool hit(Ray r, float dist_min, float dist_max, HitRecord rec);
+    bool hit(Ray r, HitRecord*);
     ~Sphere() = default;
 
     Vec3f center;
     float radius;
+
+    float diff(Vec3f p);
 };
 
 

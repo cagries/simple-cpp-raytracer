@@ -35,10 +35,10 @@ struct Ray {
 };
 
 struct Vec4f {
-    float x;
-    float y;
-    float z;
-    float w;
+    float l;
+    float r;
+    float b;
+    float t;
 };
 
 Vec3f cross(Vec3f a, Vec3f b);

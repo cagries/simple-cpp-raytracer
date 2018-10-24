@@ -8,6 +8,6 @@ Triangle::Triangle(Material* m, Vec3f* v0, Vec3f* v1, Vec3f* v2)
 {}
 
 // TODO: implement this
-bool Triangle::hit(Ray r, float dist_min, float dist_max, HitRecord rec) {
+bool Triangle::hit(Ray r, HitRecord* rec) {
     return true;
 }
