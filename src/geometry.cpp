@@ -1,5 +1,5 @@
 #include "geometry.h"
-
+#include <math.h>
 
 Vec3f::Vec3f(float x, float y, float z)
     :x{x}, y{y}, z{z}
@@ -71,4 +71,7 @@ Vec3f cross(Vec3f a, Vec3f b) {
     };
 }
 
-
+Vec3f Vec3f::normalize() {
+    float size = sqrt(x * x + y * y + z * z);
+    return {x / size, y / size, z / size};
+}

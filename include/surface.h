@@ -6,11 +6,13 @@
 
 #include <vector>
 
-class Surface;
+struct Surface;
 
 struct HitRecord {
     float t;
-    Surface* s;
+    Material* m;
+    Vec3f normal;
+    Vec3f pos;
 };
 
 
@@ -52,6 +54,7 @@ struct Sphere : Surface {
     float radius;
 
     float diff(Vec3f p);
+    Vec3f normal(Vec3f pos);
 };
 
 

@@ -14,25 +14,36 @@ bool Sphere::hit(Ray ray, HitRecord* hr)
     if (discriminant > 0) {
         float t1 = (-ray.d) * (ray.e - center)  - std::sqrt(discriminant);
         float t2 = (-ray.d) * (ray.e - center)  + std::sqrt(discriminant);
-        hr->s = this;
-
+        hr->m = material;
         
         float divisor = ray.d * ray.d;
         if (t1 < t2) {
             if (0 < t1) {        // 0 < t1 < t2
                 hr->t = t1 / divisor;
-                return true;
+		Vec3f pos = ray.e + hr->t * ray.d;
+                hr->pos = pos;
+		hr->normal = normal(pos);
+		return true;
             } else if (0 < t2) { // t1 < 0 < t2
                 hr->t = t2 / divisor;
-                return true;
+		Vec3f pos = ray.e + hr->t * ray.d;
+                hr->pos = pos;
+		hr->normal = normal(pos);
+		return true;
             }
         } else {
             if (0 < t2) {        // 0 < t2 < t1
                 hr->t = t2 / divisor;
-                return true;
+		Vec3f pos = ray.e + hr->t * ray.d;
+                hr->pos = pos;
+		hr->normal = normal(pos);
+		return true;
             } else if (0 < t1) { // t2 < 0 < t1
                 hr->t = t1 / divisor;
-                return true;
+		Vec3f pos = ray.e + hr->t * ray.d;
+                hr->pos = pos;
+		hr->normal = normal(pos);
+		return true;
             }
         }
     }
@@ -41,7 +52,7 @@ bool Sphere::hit(Ray ray, HitRecord* hr)
 }
 
 // TODO
-Vec3f normal() {
-    return {0,0,0};
+Vec3f Sphere::normal(Vec3f pos) {
+    return (pos - center).normalize();
 }
 
