@@ -27,7 +27,7 @@ Ray Camera::generate_ray(int i, int j)
     double v = plane.bounds.b + (plane.bounds.t - plane.bounds.b) * (j + 0.5) / plane.height;
 
     Ray r;
-    r.d = plane.distance * gaze + u * right + v * up;
+    r.d = (plane.distance * gaze + u * right + v * up).normalize();
     r.e = position;
     return r;
 }

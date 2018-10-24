@@ -75,3 +75,8 @@ Vec3f Vec3f::normalize() {
     float size = sqrt(x * x + y * y + z * z);
     return {x / size, y / size, z / size};
 }
+
+
+Vec3f Vec3f::times(Vec3f rhs) {
+    return {x * rhs.x, y * rhs.y, z * rhs.z}
+}
