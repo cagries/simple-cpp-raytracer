@@ -173,7 +173,8 @@ void parser::Scene::loadFromXml(const std::string& filepath)
     {
         child = element->FirstChildElement("Material");
         stream << child->GetText() << std::endl;
-        stream >> mesh.material_id;
+        stream >> material_id;
+        mesh.material = &materials[material_id - 1];
 
         child = element->FirstChildElement("Faces");
         stream << child->GetText() << std::endl;
@@ -182,6 +183,7 @@ void parser::Scene::loadFromXml(const std::string& filepath)
         {
             stream >> v1_id >> v2_id;
             mesh.faces.push_back({
+                    mesh.material,
                     &vertex_data[v0_id-1],
                     &vertex_data[v1_id-1],
                     &vertex_data[v2_id-1]});

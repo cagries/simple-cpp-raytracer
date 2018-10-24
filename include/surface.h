@@ -27,20 +27,18 @@ struct Surface {
 };
 
 
-struct Face {
-    Vec3f *v0, *v1, *v2;
-};
-
 struct Triangle : Surface {
 
     Triangle(Material*, Vec3f*, Vec3f*, Vec3f*);
 
-    // TODO: Implement this afterwards
     bool hit(Ray r, HitRecord*);
 
-    ~Triangle() = default;
 
-    Face indices;
+    // Indices in counter-clockwise order 
+    Vec3f *a, *b, *c;
+    Vec3f normal;
+
+    ~Triangle() = default;
 };
 
 
@@ -60,8 +58,8 @@ struct Sphere : Surface {
 
 struct Mesh
 {
-    int material_id;
-    std::vector<Face> faces;
+    Material *material;
+    std::vector<Triangle> faces;
 };
 
 

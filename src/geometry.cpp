@@ -77,6 +77,6 @@ Vec3f Vec3f::normalize() {
 }
 
 
-Vec3f Vec3f::times(Vec3f rhs) {
-    return {x * rhs.x, y * rhs.y, z * rhs.z}
+Vec3f Vec3f::times(const Vec3f& rhs) {
+    return {x * rhs.x, y * rhs.y, z * rhs.z};
 }

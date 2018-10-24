@@ -14,8 +14,13 @@ INCLUDES = geometry.h parser.h surface.h light.h material.h ppm.h tinyxml2.h ray
 
 .PHONY:	clean
 
-TARGETS = main example
+TARGETS = main example tracer main_raytracer
 
+
+main_raytracer:		$(patsubst %, $(ODIR)/%, $(OBJS) main_raytracer.o)
+	$(CC) -o $@ $^ $(CFLAGS)
+
+all: $(TARGETS)
 
 # The main ray tracer program
 main:	$(patsubst %, $(ODIR)/%, $(OBJS) main.o)
@@ -26,10 +31,6 @@ example:	$(patsubst %, $(ODIR)/%, $(OBJS) example.o)
 
 # Another example program
 tracer:	$(patsubst %, $(ODIR)/%, $(OBJS) tracer.o)
-	$(CC) -o $@ $^ $(CFLAGS)
-
-
-main_raytracer:		$(patsubst %, $(ODIR)/%, $(OBJS) main_raytracer.o)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 # Recipes for object files
@@ -70,4 +71,4 @@ $(ODIR)/light.o:	 $(IDIR)/light.h $(IDIR)/geometry.h
 	$(CC) -c -o $@ $(SDIR)/light.cpp $(CFLAGS)
 
 clean:
-	@rm -f $(TARGETS) main example tracer $(ODIR)/*
+	@rm -f $(TARGETS) $(ODIR)/*

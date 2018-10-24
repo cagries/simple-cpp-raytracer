@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RAYTRACER_H
+#define RAYTRACER_H
 
 #include "camera.h"
 #include "surface.h"
@@ -13,7 +14,7 @@ public:
     void rayTrace(int cameraIndex);
     Vec3f calculateColor(Ray r, Vec3f positionColor, int recursionLevel);
     Vec3f calculateLights(HitRecord hr, Vec3f viewVector);
-//    Vec3f calculateEachLight();
+    Vec3f calculateEachLight();
     
 };
 
@@ -36,13 +37,29 @@ void RayTracer::rayTrace(int cameraIndex) {
 
 Vec3f RayTracer::calculateColor(Ray r, Vec3f positionColor ,int recursionLevel) {
     if (recursionLevel < scene.max_recursion_depth) {
-        for (int i = 0; i < scene.spheres.size(); i++) {
-            HitRecord hr;
+        HitRecord hr;
+        for (size_t i = 0; i < scene.triangles.size(); i++) {
+            if (scene.triangles[i].hit(r, &hr)) {
+                hr.pos = hr.pos + scene.shadow_ray_epsilon * hr.normal;
+                positionColor += calculateLights(hr, r.d);
+                
+                //TODO: Reflection
+            }
+        }
+        for (size_t i = 0; i < scene.triangles.size(); i++) {
             if (scene.spheres[i].hit(r, &hr)) {
                 hr.pos = hr.pos + scene.shadow_ray_epsilon * hr.normal;
                 positionColor += calculateLights(hr, r.d);
                 
                 //TODO: Reflection
+            }
+        }
+        for (size_t i = 0; i < scene.meshes.size(); i++) {
+            for (auto& triangle : scene.meshes[i].faces) {
+                if (triangle.hit(r, &hr)) {
+                    hr.pos = hr.pos + scene.shadow_ray_epsilon * hr.normal;
+                    positionColor += calculateLights(hr, r.d);
+                }
             }
         }
     }
@@ -53,3 +70,5 @@ Vec3f RayTracer::calculateColor(Ray r, Vec3f positionColor ,int recursionLevel) 
 Vec3f RayTracer::calculateLights(HitRecord hr, Vec3f viewVector) {
     return Vec3f {255, 255, 255};
 }
+
+#endif // raytracer.h

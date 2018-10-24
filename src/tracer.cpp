@@ -19,7 +19,6 @@ int main(int argc, char **argv)
 
     Camera c = sc.cameras[0];
     float t_min = std::numeric_limits<float>::max();
-    Surface* s;
 
     std::vector<Vec3f> pixels(c.plane.width * c.plane.height,
             {0,0,0});
@@ -29,24 +28,28 @@ int main(int argc, char **argv)
             Ray r = c.generate_ray(i, j);
 
             // Only test for spheres for now
-            s = nullptr;
-            HitRecord hr;
-            for (auto &sphere : sc.spheres) {
-                if (sphere.hit(r, &hr)) {
+            HitRecord hr, record;
+            bool hit = false;
+
+            for (auto &triangle : sc.triangles) {
+                if (triangle.hit(r, &hr)) {
                     if (hr.t < t_min) {
                         t_min = hr.t;
-                        s = hr.s;
+                        record = hr;
+                        hit = true;
                     }
                 }
             }
 
             // Color the pixel
-            if (s) {
+            if (hit) {
                 // For now, just color it white
+                /*
                 Sphere* sp = static_cast<Sphere*>(s);
 
                 float f = sp->diff(r(hr.t));
                 std::cout << f << std::endl;
+                */
 
                 pixels[i * c.plane.width + j] = {255, 255, 255};
             }
