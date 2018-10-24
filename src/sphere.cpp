@@ -20,29 +20,29 @@ bool Sphere::hit(Ray ray, HitRecord* hr)
         if (t1 < t2) {
             if (0 < t1) {        // 0 < t1 < t2
                 hr->t = t1 / divisor;
-		Vec3f pos = ray.e + hr->t * ray.d;
+                Vec3f pos = ray.e + hr->t * ray.d;
                 hr->pos = pos;
-		hr->normal = normal(pos);
+                hr->normal = normal(pos);
 		return true;
             } else if (0 < t2) { // t1 < 0 < t2
                 hr->t = t2 / divisor;
-		Vec3f pos = ray.e + hr->t * ray.d;
+                Vec3f pos = ray.e + hr->t * ray.d;
                 hr->pos = pos;
-		hr->normal = normal(pos);
+                hr->normal = normal(pos);
 		return true;
             }
         } else {
             if (0 < t2) {        // 0 < t2 < t1
                 hr->t = t2 / divisor;
-		Vec3f pos = ray.e + hr->t * ray.d;
+                Vec3f pos = ray.e + hr->t * ray.d;
                 hr->pos = pos;
-		hr->normal = normal(pos);
+                hr->normal = normal(pos);
 		return true;
             } else if (0 < t1) { // t2 < 0 < t1
                 hr->t = t1 / divisor;
-		Vec3f pos = ray.e + hr->t * ray.d;
+                Vec3f pos = ray.e + hr->t * ray.d;
                 hr->pos = pos;
-		hr->normal = normal(pos);
+                hr->normal = normal(pos);
 		return true;
             }
         }

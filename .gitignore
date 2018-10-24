@@ -4,4 +4,4 @@
 build/*.o
 Makefile~
 
-
+*.ppm

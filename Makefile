@@ -10,7 +10,7 @@ LDFLAGS = -lm
 OBJS = geometry.o camera.o parser.o tinyxml2.o ppm.o sphere.o triangle.o light.o
 
 
-INCLUDES = geometry.h parser.h surface.h light.h material.h ppm.h tinyxml2.h
+INCLUDES = geometry.h parser.h surface.h light.h material.h ppm.h tinyxml2.h raytracer.h
 
 .PHONY:	clean
 
@@ -20,7 +20,6 @@ TARGETS = main example
 # The main ray tracer program
 main:	$(patsubst %, $(ODIR)/%, $(OBJS) main.o)
 	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
-
 # The example program given in the student pack
 example:	$(patsubst %, $(ODIR)/%, $(OBJS) example.o)
 	$(CC) -o $@ $^ $(CFLAGS)
@@ -29,12 +28,19 @@ example:	$(patsubst %, $(ODIR)/%, $(OBJS) example.o)
 tracer:	$(patsubst %, $(ODIR)/%, $(OBJS) tracer.o)
 	$(CC) -o $@ $^ $(CFLAGS)
 
+
+main_raytracer:		$(patsubst %, $(ODIR)/%, $(OBJS) main_raytracer.o)
+	$(CC) -o $@ $^ $(CFLAGS)
+
 # Recipes for object files
 $(ODIR)/main.o:	$(patsubst %, $(IDIR)/%, parser.h camera.h ppm.h)
 	$(CC) -c -o $@ $(SDIR)/main.cpp $(CFLAGS)
 
 $(ODIR)/tracer.o:	$(patsubst %, $(IDIR)/%, parser.h camera.h ppm.h)
 	$(CC) -c -o $@ $(SDIR)/tracer.cpp $(CFLAGS)
+
+$(ODIR)/main_raytracer.o:	$(patsubst %, $(IDIR)/%, parser.h camera.h raytracer.h ppm.h)
+	$(CC) -c -o $@ $(SDIR)/main_raytracer.cpp $(CFLAGS)
 
 $(ODIR)/ppm.o:	$(IDIR)/ppm.h
 	$(CC) -c -o $@ $(SDIR)/ppm.cpp $(CFLAGS)
