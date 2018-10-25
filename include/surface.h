@@ -5,6 +5,7 @@
 #include "material.h"
 
 #include <vector>
+#include <limits>
 
 /**
  * @brief A HitRecord stores information for a Surface hit by a Ray.
@@ -14,6 +15,8 @@ struct HitRecord {
     Material* m;  //! A pointer to a Material.
     Vec3f pos;    //! The point hit by the Ray.
     Vec3f normal; //! The surface normal for the Surface at \a pos.
+    
+    HitRecord() : t(std::numeric_limits<float>::max()) {}
 };
 
 

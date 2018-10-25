@@ -10,42 +10,45 @@ void RayTracer::rayTrace(int cameraIndex) {
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             // TODO: Find out what's incorrect
-            Ray r = scene.cameras[cameraIndex].generate_ray(i,j);
+            Ray viewRay = scene.cameras[cameraIndex].generate_ray(i,j);
             image[i * width + j] =
-                calculateColor(r, scene.background_color, 0);
+                calculateColor(viewRay, scene.background_color, 0);
         }
     }
     
     images.push_back(image);
 }
 
-Vec3f RayTracer::calculateColor(Ray r, Vec3f positionColor ,int recursionLevel) {
+Vec3f RayTracer::calculateColor(Ray viewRay, Vec3f positionColor ,int recursionLevel) {
     if (recursionLevel < scene.max_recursion_depth) {
         HitRecord hr;
         for (size_t i = 0; i < scene.triangles.size(); i++) {
-            if (scene.triangles[i].hit(r, &hr)) {
-                hr.pos = hr.pos + scene.shadow_ray_epsilon * hr.normal;
-                positionColor += calculateLights(hr, r.d);
-                
-                //TODO: Reflection
+            if (scene.triangles[i].hit(viewRay, &hr)) {
+
             }
         }
         for (size_t i = 0; i < scene.spheres.size(); i++) {
-            if (scene.spheres[i].hit(r, &hr)) {
-                hr.pos = hr.pos + scene.shadow_ray_epsilon * hr.normal;
-                positionColor += calculateLights(hr, r.d);
+            if (scene.spheres[i].hit(viewRay, &hr)) {
                 
-                //TODO: Reflection
             }
         }
         for (size_t i = 0; i < scene.meshes.size(); i++) {
             for (auto& triangle : scene.meshes[i].faces) {
-                if (triangle.hit(r, &hr)) {
-                    hr.pos = hr.pos + scene.shadow_ray_epsilon * hr.normal;
-                    positionColor += calculateLights(hr, r.d);
+                if (triangle.hit(viewRay, &hr)) {
+
                 }
             }
         }
+        
+        //Still segFault
+        if(hr.m == NULL) {
+            return positionColor;
+        }
+        
+        hr.pos = hr.pos + scene.shadow_ray_epsilon * hr.normal;
+        positionColor += calculateLights(hr, viewRay.d);
+        
+        //TODO: Reflection
     }
     
     return positionColor;
@@ -75,19 +78,20 @@ Vec3f RayTracer::calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVe
     
     Ray lightRay;
     lightRay.e = hr.pos + scene.shadow_ray_epsilon * lightVector;
-    lightRay.d = lightVector;
+    lightRay.d = lightVector.normalize();
     
-    for (size_t i = 0; i < scene.spheres.size(); i++) {
+    //Shadows
+/*    for (size_t i = 0; i < scene.spheres.size(); i++) {
         if (scene.spheres[i].hit(lightRay, nullptr)) {
             return color;
         }
     }
-    
+*/
     color += (1 / (distance * distance)) * dot * hr.m->diffuse.times(light.intensity);
     
     //Calculations of half vector.
-    Vec3f h = (1 / (lightVector + viewVector).norm()) * (lightVector + viewVector);
-    color += pow((std::max(0.0f, h * hr.normal)), hr.m->phong_exponent) * hr.m->specular * light.intensity / (distance * distance);
+    Vec3f h = (1 / (lightRay.d + viewVector).norm()) * (lightVector + viewVector);
+    color += (1 / (distance * distance)) * pow((std::max(0.0f, h * hr.normal)), hr.m->phong_exponent) * hr.m->specular * light.intensity;
     
     return color;
 }

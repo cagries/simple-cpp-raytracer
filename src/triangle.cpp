@@ -58,7 +58,7 @@ bool Triangle::hit(Ray ray, HitRecord* rec) {
                 return false;
             } else {
                 // Fill out hit record
-                if (rec) {
+                if (rec && rec->t > t) {
                     rec->t = t;
                     rec->normal = normal;
                     rec->pos = ray(t);
