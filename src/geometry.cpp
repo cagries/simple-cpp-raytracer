@@ -55,7 +55,7 @@ float operator*(Vec3f lhs, Vec3f rhs) {
 /**
  * The ray equation.
  */
-Vec3f Ray::operator()(int t) {
+Vec3f Ray::operator()(float t) {
         Vec3f v = t * d;
         return {e.x + v.x, e.y + v.y, e.z + v.z} ;
 }

@@ -58,10 +58,12 @@ bool Triangle::hit(Ray ray, HitRecord* rec) {
                 return false;
             } else {
                 // Fill out hit record
-                rec->t = t;
-                rec->normal = normal;
-                rec->pos = ray(t);
-                rec->m = material;
+                if (rec) {
+                    rec->t = t;
+                    rec->normal = normal;
+                    rec->pos = ray(t);
+                    rec->m = material;
+                }
                 return true;
             }
         }

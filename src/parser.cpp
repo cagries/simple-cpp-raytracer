@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <iostream>
 
-void parser::Scene::loadFromXml(const std::string& filepath)
+void Scene::loadFromXml(const std::string& filepath)
 {
     tinyxml2::XMLDocument file;
     std::stringstream stream;

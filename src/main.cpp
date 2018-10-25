@@ -10,7 +10,7 @@ if (argc < 2) {
     return 1;
     }
 
-    parser::Scene sc;
+    Scene sc;
     sc.loadFromXml(argv[1]);
 
     Camera c = sc.cameras[0];

@@ -51,7 +51,13 @@ struct Sphere : Surface {
     Vec3f center;
     float radius;
 
-    float diff(Vec3f p);
+    /**
+     * @brief Returns the surface normal of the sphere at the point p.
+     *
+     * @param pos
+     *
+     * @return The surface normal.
+     */
     Vec3f normal(Vec3f pos);
 };
 

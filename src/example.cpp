@@ -7,7 +7,7 @@ typedef unsigned char RGB[3];
 int main(int argc, char* argv[])
 {
     // Sample usage for reading an XML scene file
-    parser::Scene scene;
+    Scene scene;
 
     scene.loadFromXml(argv[1]);
 

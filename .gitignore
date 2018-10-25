@@ -1,10 +1,16 @@
+# The usual ignore targets.
 .DS_Store
-
 *.*.swp
 *.*~
-
-build/*.o
 Makefile~
-
 *.ppm
+
+# Skip these directories. 
 test/
+
+# Skip these executables.
+
+main
+main_raytracer
+tracer
+example
