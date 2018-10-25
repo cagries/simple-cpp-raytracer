@@ -16,7 +16,7 @@ struct HitRecord {
     Vec3f pos;    //! The point hit by the Ray.
     Vec3f normal; //! The surface normal for the Surface at \a pos.
     
-    HitRecord() : t(std::numeric_limits<float>::max()) {}
+    HitRecord() : t(std::numeric_limits<float>::max()), m(NULL), pos({0, 0, 0}), normal({0, 0, 0}) {}
 };
 
 
