@@ -1,3 +1,9 @@
+/**
+ * \file parser.h
+ * @brief Contains the Scene class and parsing functions.
+ *
+ */
+
 #ifndef __HW1__PARSER__
 #define __HW1__PARSER__
 

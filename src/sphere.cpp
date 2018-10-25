@@ -7,6 +7,8 @@ Sphere::Sphere(Material *material, Vec3f center, float radius)
     : Surface{material}, center{center}, radius{radius}
 {}
 
+
+
 bool Sphere::hit(Ray ray, HitRecord* hr)
 {
     float discriminant = pow(ray.d * (ray.e - center), 2) - (ray.d * ray.d) * ((ray.e - center) * (ray.e - center) - radius * radius);

@@ -9,7 +9,8 @@ LDFLAGS = -lm
 OBJS = geometry.o camera.o parser.o tinyxml2.o ppm.o sphere.o triangle.o light.o raytracer.o
 INCLUDES = geometry.h parser.h surface.h light.h material.h ppm.h tinyxml2.h raytracer.h
 
-.PHONY:	clean
+DOXYGEN_CONFIG = Doxyfile
+.PHONY:	clean docs all
 
 TARGETS = main example tracer main_raytracer
 
@@ -74,4 +75,5 @@ $(ODIR)/raytracer.o:	 $(IDIR)/raytracer.h $(IDIR)/parser.h $(SDIR)/raytracer.cpp
 docs:
 	doxygen doc/$(DOXYGEN_CONFIG)
 clean:
-	@rm -f $(TARGETS) $(ODIR)/*
+	@rm -rf $(TARGETS) $(ODIR)/* doc/html/* doc/latex/*
+
