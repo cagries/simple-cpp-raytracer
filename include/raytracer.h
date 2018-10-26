@@ -23,6 +23,7 @@ public:
     Vec3f calculateColor(Ray r, Vec3f positionColor, int recursionLevel);
     Vec3f calculateLights(HitRecord hr, Vec3f viewVector);
     Vec3f calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVector);
+    Vec3f clampColor(Vec3f);
 };
 
 #endif // raytracer.h

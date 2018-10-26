@@ -80,6 +80,7 @@ float operator*(Vec3f lhs, Vec3f rhs);
  */
 Vec3f operator*(float t, Vec3f rhs);
 
+Vec3f operator/(Vec3f lhs, float divisor);
 
 /**
  * @brief The Ray function object.

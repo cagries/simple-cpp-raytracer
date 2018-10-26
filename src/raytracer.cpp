@@ -1,5 +1,6 @@
 #include "raytracer.h"
 #include "parser.h"
+#include <iostream>
 
 void RayTracer::rayTrace(int cameraIndex) {
     int width = scene.cameras[cameraIndex].plane.width;
@@ -24,7 +25,7 @@ void RayTracer::rayTrace(int cameraIndex) {
             // Get a normalized ray
             Ray viewRay = scene.cameras[cameraIndex].generate_ray(j,height-i-1);
             image[i * width + j] =
-                calculateColor(viewRay, scene.background_color, 0);
+                clampColor(calculateColor(viewRay, scene.background_color, 0));
         }
     }
     
@@ -53,8 +54,8 @@ Vec3f RayTracer::calculateColor(Ray viewRay, Vec3f positionColor ,int recursionL
             }
         }
         
-        if (hr.m == nullptr) {
-            return positionColor;
+        if (hitFlag) {
+            positionColor += calculateLights(hr, viewRay.d);
         }
         //TODO: Reflection
     }
@@ -100,9 +101,17 @@ Vec3f RayTracer::calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVe
     color += (1 / (distance * distance)) * dot * (hr.m->diffuse.times(light.intensity));
     
     //Calculations of half vector.
-/*    Vec3f h = (1 / (lightRay.d + viewVector).norm()) * (lightVector + viewVector);
-    color += (1 / (distance * distance)) * pow((std::max(0.0f, h * hr.normal)), hr.m->phong_exponent) * hr.m->specular * light.intensity;
- */
+    Vec3f h = (lightVector + -viewVector);
+    h = h / h.norm();
+    color += (1 / (distance * distance)) * pow((std::max(0.0f, h * hr.normal)), hr.m->phong_exponent) * hr.m->specular.times(light.intensity);
+
+    return color;
+}
+
+Vec3f RayTracer::clampColor(Vec3f color) {
+    if (color.x > 255) color.x = 255;
+    if (color.y > 255) color.y = 255;
+    if (color.z > 255) color.z = 255;
     return color;
 }
 

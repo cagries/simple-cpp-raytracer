@@ -52,6 +52,10 @@ float operator*(Vec3f lhs, Vec3f rhs) {
     return (lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z);
 }
 
+Vec3f operator/(Vec3f lhs, float divisor) {
+    return {lhs.x / divisor, lhs.y / divisor, lhs.z / divisor};
+}
+
 /**
  * The ray equation.
  */
