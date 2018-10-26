@@ -7,10 +7,22 @@ void RayTracer::rayTrace(int cameraIndex) {
     
     std::vector<Vec3f> image(width * height, scene.background_color);
     
+/**
+ * The book's image plane indexing is different from the slides.
+ * Thus we have
+ *
+ *                            
+ *            *-----------------------* <-- (n_x-1, n_y-1)
+ *            |                       |
+ *            |                       |
+ *            |                       |
+ *  (0,0) --> *-----------------------*
+ *
+ */
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            // TODO: Find out what's incorrect
-            Ray viewRay = scene.cameras[cameraIndex].generate_ray(i,j);
+            // Get a normalized ray
+            Ray viewRay = scene.cameras[cameraIndex].generate_ray(j,height-i-1);
             image[i * width + j] =
                 calculateColor(viewRay, scene.background_color, 0);
         }
@@ -40,9 +52,9 @@ Vec3f RayTracer::calculateColor(Ray viewRay, Vec3f positionColor ,int recursionL
                 }
             }
         }
-        if (hitFlag) {
-            hr.pos = hr.pos + scene.shadow_ray_epsilon * hr.normal;
-            positionColor = calculateLights(hr, viewRay.d);
+        
+        if (hr.m == nullptr) {
+            return positionColor;
         }
         //TODO: Reflection
     }
