@@ -57,8 +57,18 @@ Vec3f RayTracer::calculateColor(Ray viewRay, Vec3f positionColor ,int recursionL
         }
         
         if (hitFlag) {
+            
+            if (hr.m->mirror.norm() > 0) {
+                Vec3f reflectionVector = viewRay.d - 2.0f * (hr.normal * viewRay.d) * hr.normal;
+                Ray reflectionRay;
+                reflectionRay.d = reflectionVector.normalize();
+                reflectionRay.e = hr.pos + scene.shadow_ray_epsilon * hr.normal;
+                positionColor += hr.m->mirror.times(calculateColor(reflectionRay, scene.background_color, recursionLevel + 1));
+            }
+            
             positionColor += calculateLights(hr, viewRay.d);
         }
+        
         //TODO: Reflection
     }
     
@@ -121,18 +131,21 @@ Vec3f RayTracer::calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVe
     
     //Calculate Diffuse Shading
     color += (1 / (distance * distance)) * dot * (hr.m->diffuse.times(light.intensity));
+//    std::cout << color.x << " " << color.y << " " << color.z << std::endl;
     
     //Calculations of half vector.
-    Vec3f h = (lightVector + -viewVector);
+    Vec3f h = (lightRay.d + -viewVector);
     h = h / h.norm();
     
     //Calculate Blinn-Phong Shader
-    color += (1 / (distance * distance)) * pow((std::max(0.0f, h * hr.normal)), hr.m->phong_exponent) * hr.m->specular.times(light.intensity);
+    color +=  pow((std::max(0.0f, h * hr.normal)), hr.m->phong_exponent) *
+        hr.m->specular.times(light.intensity) / (distance * distance);
 
     return color;
 }
 
 Vec3f RayTracer::clampColor(Vec3f color) {
+    color.x = (int) color.x;
     if (color.x > 255) color.x = 255;
     if (color.y > 255) color.y = 255;
     if (color.z > 255) color.z = 255;

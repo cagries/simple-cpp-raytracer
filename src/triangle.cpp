@@ -6,7 +6,7 @@
 Triangle::Triangle(Material* m, Vec3f* a, Vec3f* b, Vec3f* c)
     : Surface{m}, a{a}, b{b}, c{c}
 {
-    normal = cross((*b - *a), (*c - *a));
+    normal = cross((*b - *a), (*c - *a)).normalize();
 }
 
 bool Triangle::hit(Ray ray, HitRecord* rec) {
@@ -36,7 +36,7 @@ bool Triangle::hit(Ray ray, HitRecord* rec) {
               ab.y * (gf_di) +
               ab.z * (dh_eg);
 
-    float t = - (ac.z * ei_hf +
+    float t = - (ac.z * ak_jb +
                  ac.y * jc_al +
                  ac.x * bl_kc) / M;
 
