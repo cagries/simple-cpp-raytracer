@@ -18,28 +18,40 @@ if (argc < 2) {
     RayTracer rt;
     rt.scene = sc;
     
-    rt.rayTrace(0);
+//    Vec3f color_black = {0, 0, 0};
+//    Ray observeRay = rt.scene.cameras[0].generate_ray(210, 180);
+//    rt.calculateColor(observeRay, color_black, 0);
     
-    int width = rt.scene.cameras[0].plane.width;
-    int height = rt.scene.cameras[0].plane.height;
+    int width;
+    int height;
+    int i = 0, j = 0;
     
-    
-    unsigned char* image = new unsigned char [width * height * 3];
-    
-    int i = 0;
-    int j = 0;
-    for (int y = 0; y < height; ++y)
-    {
-        for (int x = 0; x < width; ++x)
+    for (size_t a = 0; a < sc.cameras.size(); a++) {
+        std::cout << std::to_string(a);
+        rt.rayTrace(a);
+        
+        width = rt.scene.cameras[a].plane.width;
+        height = rt.scene.cameras[a].plane.height;
+        
+        unsigned char* image = new unsigned char [width * height * 3];
+        
+        i = 0;
+        j = 0;
+        for (int y = 0; y < height; ++y)
         {
-            image[i]   = rt.images[0][j].x;
-            image[i+1] = rt.images[0][j].y;
-            image[i+2] = rt.images[0][j].z;
-            i += 3;
-            j++;
+            for (int x = 0; x < width; ++x)
+            {
+                image[i]   = rt.images[a][j].x;
+                image[i+1] = rt.images[a][j].y;
+                image[i+2] = rt.images[a][j].z;
+                i += 3;
+                j++;
+            }
         }
+        
+        write_ppm((std::to_string(a) + std::string(argv[2])).data(), image, width, height);
     }
-    write_ppm(argv[2], image, width, height);
-
+    
+     
     return 0;
 }

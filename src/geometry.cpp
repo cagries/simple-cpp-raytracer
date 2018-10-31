@@ -81,6 +81,9 @@ Vec3f Vec3f::normalize() {
 }
 
 float Vec3f::norm() {
+    if (x == 0 && y == 0 && z == 0)
+        return 0;
+    
     return sqrt(x * x + y * y + z * z);
 }
 
