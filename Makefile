@@ -3,7 +3,7 @@ IDIR = include
 SDIR = src
 ODIR = build
 
-CFLAGS = -Wall -std=c++11 -Werror -g -I$(IDIR)
+CFLAGS = -Wall -std=c++11 -Werror -O3 -I$(IDIR)
 LDFLAGS = -lm
 
 OBJS = geometry.o camera.o parser.o tinyxml2.o ppm.o sphere.o triangle.o light.o raytracer.o
@@ -12,10 +12,10 @@ INCLUDES = geometry.h parser.h surface.h light.h material.h ppm.h tinyxml2.h ray
 DOXYGEN_CONFIG = Doxyfile
 .PHONY:	clean docs all
 
-TARGETS = main example tracer main_raytracer
+TARGETS = raytracer example
 
 
-main_raytracer:		$(patsubst %, $(ODIR)/%, $(OBJS) main_raytracer.o)
+raytracer:		$(patsubst %, $(ODIR)/%, $(OBJS) main_raytracer.o)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 all: $(TARGETS)
@@ -73,6 +73,7 @@ $(ODIR)/raytracer.o:	 $(IDIR)/raytracer.h $(IDIR)/parser.h $(SDIR)/raytracer.cpp
 
 
 docs:
+	@echo "Generating documentation..."
 	doxygen doc/$(DOXYGEN_CONFIG)
 clean:
 	@rm -rf $(TARGETS) $(ODIR)/* doc/html/* doc/latex/*

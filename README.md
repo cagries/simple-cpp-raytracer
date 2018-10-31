@@ -1,13 +1,15 @@
-# The first assignment of CENG477
+# RayTracer
+This is a basic, single-threaded ray tracer written in C++. 
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+## Quick start
 
-## To-do
+To compile the `raytracer` executable, run
+```
+$ make
+```
+at the command line. After defining your own scene file, you can run
 
-* Finish the readme
-
-* Write unit tests
-
-* Add installation and usage guide
-
-* etc.
+```
+$ ./raytracer <scene_file.xml>
+```
+to generate `image_name.ppm`, where the image name is the name defined in the scene file.

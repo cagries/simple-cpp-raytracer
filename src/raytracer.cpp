@@ -2,11 +2,9 @@
 #include "parser.h"
 #include <iostream>
 
-void RayTracer::rayTrace(int cameraIndex) {
+void RayTracer::rayTrace(unsigned char *image, int cameraIndex) {
     int width = scene.cameras[cameraIndex].plane.width;
     int height = scene.cameras[cameraIndex].plane.height;
-    
-    std::vector<Vec3f> image(width * height, scene.background_color);
     
 /**
  * The book's image plane indexing is different from the slides.
@@ -20,16 +18,17 @@ void RayTracer::rayTrace(int cameraIndex) {
  *  (0,0) --> *-----------------------*
  *
  */
+    int index = 0;
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             // Get a normalized ray
             Ray viewRay = scene.cameras[cameraIndex].generate_ray(j,height-i-1);
-            image[i * width + j] =
-                clampColor(calculateColor(viewRay, scene.background_color, 0));
+            Vec3f pixelColor = clampColor(calculateColor(viewRay, scene.background_color, 0));
+            image[index++] = pixelColor.x;
+            image[index++] = pixelColor.y;
+            image[index++] = pixelColor.z;
         }
     }
-    
-    images.push_back(image);
 }
 
 Vec3f RayTracer::calculateColor(Ray viewRay, Vec3f positionColor ,int recursionLevel) {
