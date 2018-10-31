@@ -41,7 +41,7 @@ bool Triangle::hit(Ray ray, HitRecord* rec) {
                  ac.x * bl_kc) / M;
 
     // Check for intersection
-    if (t < 0) {
+    if (t <= 0) {
         return false;
     } else {
         float gamma = (ray.d.z * ak_jb +
