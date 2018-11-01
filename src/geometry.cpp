@@ -1,6 +1,8 @@
 #include "geometry.h"
 #include <math.h>
 
+namespace rt {
+
 Vec3f::Vec3f(float x, float y, float z)
     :x{x}, y{y}, z{z}
 {}
@@ -90,3 +92,5 @@ float Vec3f::norm() {
 Vec3f Vec3f::times(const Vec3f& rhs) {
     return {x * rhs.x, y * rhs.y, z * rhs.z};
 }
+
+} // namespace rt

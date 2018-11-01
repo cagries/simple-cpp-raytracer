@@ -3,8 +3,8 @@ IDIR = include
 SDIR = src
 ODIR = build
 
-CFLAGS = -Wall -std=c++11 -Werror -O3 -I$(IDIR)
-LDFLAGS = -lm
+CFLAGS = -Wall -std=c++14 -Werror -I$(IDIR) -O3
+LDFLAGS = -lm -lpthread
 
 OBJS = geometry.o camera.o parser.o tinyxml2.o ppm.o sphere.o triangle.o light.o raytracer.o
 INCLUDES = geometry.h parser.h surface.h light.h material.h ppm.h tinyxml2.h raytracer.h
@@ -16,20 +16,9 @@ TARGETS = raytracer example
 
 
 raytracer:		$(patsubst %, $(ODIR)/%, $(OBJS) main_raytracer.o)
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
 
 all: $(TARGETS)
-
-# The main ray tracer program
-main:	$(patsubst %, $(ODIR)/%, $(OBJS) main.o)
-	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
-# The example program given in the student pack
-example:	$(patsubst %, $(ODIR)/%, $(OBJS) example.o)
-	$(CC) -o $@ $^ $(CFLAGS)
-
-# Another example program
-tracer:	$(patsubst %, $(ODIR)/%, $(OBJS) tracer.o)
-	$(CC) -o $@ $^ $(CFLAGS)
 
 # Recipes for object files
 $(ODIR)/main.o:	$(patsubst %, $(IDIR)/%, parser.h camera.h ppm.h) $(SDIR)/main.cpp
@@ -69,7 +58,7 @@ $(ODIR)/light.o:	 $(IDIR)/light.h $(IDIR)/geometry.h
 	$(CC) -c -o $@ $(SDIR)/light.cpp $(CFLAGS)
 
 $(ODIR)/raytracer.o:	 $(IDIR)/raytracer.h $(IDIR)/parser.h $(SDIR)/raytracer.cpp
-	$(CC) -c -o $@ $(SDIR)/raytracer.cpp $(CFLAGS)
+	$(CC) -c -o $@ $(SDIR)/raytracer.cpp $(CFLAGS) $(LDFLAGS)
 
 
 docs:

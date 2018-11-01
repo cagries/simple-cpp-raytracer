@@ -1,8 +1,26 @@
 #include "raytracer.h"
 #include "parser.h"
-#include <iostream>
 
-void RayTracer::rayTrace(unsigned char *image, int cameraIndex) {
+#include <iostream>
+#include <future>
+
+namespace rt {
+
+void RayTracer::trace_helper(unsigned char *image, int cameraIndex, int begin, int end, int index) const {
+    int width = scene.cameras[cameraIndex].plane.width;
+    int height = scene.cameras[cameraIndex].plane.height;
+    for (int i = begin; i < end; i++) {
+        for (int j = 0; j < width; j++) {
+            // Get a normalized ray
+            Ray viewRay = scene.cameras[cameraIndex].generate_ray(j,height-i-1);
+            Vec3f pixelColor = clampColor(calculateColor(viewRay, scene.background_color, 0));
+            image[index++] = pixelColor.x;
+            image[index++] = pixelColor.y;
+            image[index++] = pixelColor.z;
+        }
+    }
+}
+void RayTracer::rayTrace(unsigned char *image, int cameraIndex) const {
     int width = scene.cameras[cameraIndex].plane.width;
     int height = scene.cameras[cameraIndex].plane.height;
     
@@ -29,13 +47,33 @@ void RayTracer::rayTrace(unsigned char *image, int cameraIndex) {
             image[index++] = pixelColor.z;
         }
     }
-}
 
-Vec3f RayTracer::calculateColor(Ray viewRay, Vec3f positionColor ,int recursionLevel) {
-//    std::cout << "My recursion level: " + std::to_string(recursionLevel) << std::endl;
-//    std::cout << "MaxRecursionDepth: " + std::to_string(scene.max_recursion_depth) << std::endl;
+    /*
+    std::vector<std::future<void>> futures;
+
+    constexpr int num_threads = 2;
+    // Call the threads
+    int leap = static_cast<int>(height / num_threads);
+    int jump = static_cast<int>(width * height / num_threads);
+
+    for (int i = 0; i < num_threads; i++) {
+        futures.push_back(
+                std::async(std::launch::async,
+                    [this, image, cameraIndex, leap, jump, i] {
+                    trace_helper(image, cameraIndex, i * leap, (i+1) * leap, i * jump);
+                    }));
+    }
+
+    // Wait for all threads before quitting
+    for (auto& future : futures) {
+        future.get();
+    }
+    */
+}
+ 
+
+Vec3f RayTracer::calculateColor(Ray viewRay, Vec3f positionColor ,int recursionLevel) const {
     if (recursionLevel <= scene.max_recursion_depth) {
-//        std::cout << "Passed recursion test." << std::endl;
         bool hitFlag = false;
         HitRecord hr;
         for (size_t i = 0; i < scene.triangles.size(); i++) {
@@ -59,32 +97,23 @@ Vec3f RayTracer::calculateColor(Ray viewRay, Vec3f positionColor ,int recursionL
         }
         
         if (hitFlag) {
-//            std::cout << "Hit an object." << std::endl;
             
             if (hr.m->mirror.norm() > 0) {
-//                std::cout << "Going to reflect." << std::endl;
                 Vec3f reflectionVector = viewRay.d - 2.0f * (hr.normal * viewRay.d) * hr.normal;
                 Ray reflectionRay;
                 reflectionRay.d = reflectionVector.normalize();
                 reflectionRay.e = hr.pos + scene.shadow_ray_epsilon * reflectionVector;
                 
- //               std::cout << "my HitRecord pos: " << std::to_string(hr.pos.x) << " " << std::to_string(hr.pos.y) << " " << std::to_string(hr.pos.z) << std::endl;
-                
-//                std::cout << "my HitRecord material: " << std::to_string(hr.m->mirror.x) << " " << std::to_string(hr.m->mirror.y) << " " << std::to_string(hr.m->mirror.z) << std::endl;
-                
                 positionColor += hr.m->mirror.times(calculateColor(reflectionRay, scene.background_color, recursionLevel + 1));
             }
-            
-//            std::cout << "Returning calculateLight color: " << std::to_string(calculateLights(hr, viewRay.d).x) << " " << std::to_string(calculateLights(hr, viewRay.d).y) << " " << std::to_string(calculateLights(hr, viewRay.d).z) << std::endl;
             
             positionColor += calculateLights(hr, viewRay.d);
         }
     }
-//    std::cout << "Returning positionColor: " << std::to_string(positionColor.x) << " " << std::to_string(positionColor.y) << " " << std::to_string(positionColor.z) << std::endl;
     return positionColor;
 }
 
-Vec3f RayTracer::calculateLights(HitRecord hr, Vec3f viewVector) {
+Vec3f RayTracer::calculateLights(HitRecord hr, Vec3f viewVector) const {
     
     Vec3f color = hr.m->ambient.times(scene.ambient_light);
     
@@ -96,7 +125,7 @@ Vec3f RayTracer::calculateLights(HitRecord hr, Vec3f viewVector) {
  
 }
 
-Vec3f RayTracer::calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVector) {
+Vec3f RayTracer::calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVector) const {
     Vec3f color = {0, 0, 0};
     Vec3f lightVector = light.position - hr.pos;
     
@@ -140,7 +169,6 @@ Vec3f RayTracer::calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVe
     
     //Calculate Diffuse Shading
     color += (1 / (distance * distance)) * dot * (hr.m->diffuse.times(light.intensity));
-//    std::cout << color.x << " " << color.y << " " << color.z << std::endl;
     
     //Calculations of half vector.
     Vec3f h = (lightRay.d + -viewVector);
@@ -153,7 +181,7 @@ Vec3f RayTracer::calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVe
     return color;
 }
 
-Vec3f RayTracer::clampColor(Vec3f color) {
+Vec3f RayTracer::clampColor(Vec3f color) const {
     color.x = (int) color.x;
     if (color.x > 255) color.x = 255;
     if (color.y > 255) color.y = 255;
@@ -161,5 +189,4 @@ Vec3f RayTracer::clampColor(Vec3f color) {
     return color;
 }
 
-
-
+} // namespace rt

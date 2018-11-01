@@ -7,6 +7,7 @@
 #define GEOMETRY_H
 
 
+namespace rt {
 
 /**
  * @brief 
@@ -121,5 +122,7 @@ struct Vec4f {
  * @return  The cross product (this x rhs). 
  */
 Vec3f cross(Vec3f a, Vec3f b);
+
+} // namespace rt 
 
 #endif // geometry.h

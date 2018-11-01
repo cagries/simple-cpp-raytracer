@@ -16,6 +16,9 @@
 #include "material.h"
 #include "surface.h"
 
+
+namespace rt {
+
 /**
  * @brief The Scene class.
  */
@@ -36,5 +39,6 @@ struct Scene
     std::vector<Sphere> spheres;
 };
 
+} // namespace rt
 #endif
 
