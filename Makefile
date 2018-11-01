@@ -3,7 +3,7 @@ IDIR = include
 SDIR = src
 ODIR = build
 
-CFLAGS = -Wall -std=c++11 -Werror -O3 -I$(IDIR)
+CFLAGS = -Wall -std=c++14 -Werror -O3 -pg -I$(IDIR)
 LDFLAGS = -lm
 
 OBJS = geometry.o camera.o parser.o tinyxml2.o ppm.o sphere.o triangle.o light.o raytracer.o
