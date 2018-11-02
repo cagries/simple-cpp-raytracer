@@ -19,13 +19,19 @@ struct Vec3f {
     float y;
     float z;
 
-    Vec3f operator+=(const Vec3f& rhs);
+    Vec3f& operator+=(const Vec3f& rhs);
 
-    Vec3f operator-=(const Vec3f& rhs);
+    Vec3f& operator-=(const Vec3f& rhs);
 
     Vec3f(const Vec3f& rhs);
 
-    Vec3f(float x =0, float y =0, float z =0);
+    Vec3f(Vec3f&& rhs);
+
+    Vec3f& operator=(const Vec3f& rhs);
+
+    Vec3f& operator=(Vec3f&& rhs);
+
+    Vec3f(float x ={}, float y ={}, float z ={});
 
 
     /**
@@ -33,14 +39,14 @@ struct Vec3f {
      *
      * @return A unit vector in the same direction as this.
      */
-    Vec3f normalize();
+    Vec3f normalize() const;
     
     /**
      * @brief Returns the norm.
      *
      * @return The norm (length) of this vector.
      */
-    float norm();
+    float norm() const;
 
 
     /**
@@ -50,7 +56,7 @@ struct Vec3f {
      *
      * @return The element-wise product of the two vectors.
      */
-    Vec3f times(const Vec3f& rhs);
+    Vec3f times(const Vec3f& rhs) const;
 };
 
 Vec3f operator+(Vec3f lhs, Vec3f rhs);
@@ -100,7 +106,7 @@ struct Ray {
      *
      * @return The ray's calculated position.
      */
-    Vec3f operator()(float t);
+    Vec3f operator()(float t) const;
 };
 
 
@@ -121,8 +127,7 @@ struct Vec4f {
  *
  * @return  The cross product (this x rhs). 
  */
-Vec3f cross(Vec3f a, Vec3f b);
-
+Vec3f cross(Vec3f a, Vec3f b); 
 } // namespace rt 
 
 #endif // geometry.h
