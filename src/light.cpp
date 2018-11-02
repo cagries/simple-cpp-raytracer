@@ -1,6 +1,7 @@
 #include "light.h"
 #include "geometry.h"
 
+namespace rt {
 
 Ray PointLight::shadow_ray(Vec3f x)
 {
@@ -10,3 +11,5 @@ Ray PointLight::shadow_ray(Vec3f x)
     float eps = 1e-4;
     return Ray{(x + eps *w_i), w_i};
 }
+
+} // namespace rt

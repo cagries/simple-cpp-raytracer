@@ -9,6 +9,8 @@
 
 #include "geometry.h"
 
+namespace rt {
+
 /**
  * @brief A base class for lights.
  */
@@ -39,4 +41,5 @@ struct PointLight : Light {
     Ray shadow_ray(Vec3f x);
 };
 
+} // namespace rt
 #endif // light.h
