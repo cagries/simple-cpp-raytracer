@@ -2,6 +2,7 @@
 #include "parser.h"
 #include <iostream>
 #include <thread>
+#include <future>
 
 namespace rt {
 
@@ -74,9 +75,11 @@ Vec3f RayTracer::calculateColor(Ray viewRay, Vec3f positionColor ,int recursionL
         }
         
         for (size_t i = 0; i < scene.meshes.size(); i++) {
-            for (auto& triangle : scene.meshes[i].faces) {
-                if (triangle.hit(viewRay, &hr)) {
-                    hitFlag = true;
+            if (scene.meshes[i].hit(viewRay, nullptr)) {
+                for (auto& triangle : scene.meshes[i].faces) {
+                    if (triangle.hit(viewRay, &hr)) {
+                        hitFlag = true;
+                    }
                 }
             }
         }
@@ -101,10 +104,24 @@ Vec3f RayTracer::calculateLights(HitRecord hr, Vec3f viewVector) const {
     
     Vec3f color = hr.m->ambient.times(scene.ambient_light);
     
+    std::vector<std::future<Vec3f>> futures;
+
     for (size_t i = 0; i < scene.point_lights.size(); i++) {
         color += calculateEachLight(hr, scene.point_lights[i], viewVector);
+        
+        /*
+        color += std::async(std::launch::async, [&, this, hr, i, viewVector] { 
+                return calculateEachLight(hr, scene.point_lights[i], viewVector);
+            });
+            */
     }
    
+    /*
+    for (auto& future: futures) {
+        color += future.get();
+    }
+    */
+
     return color;
  
 }
