@@ -5,6 +5,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <iostream>
+#include <vector>
 
 namespace rt {
 
@@ -168,7 +169,7 @@ void Scene::loadFromXml(const std::string& filepath)
     element = root->FirstChildElement("Objects");
     element = element->FirstChildElement("Mesh");
 
-    Mesh mesh;
+//    Mesh mesh;
     int v0_id, v1_id, v2_id;
 
     while (element)
@@ -176,24 +177,80 @@ void Scene::loadFromXml(const std::string& filepath)
         child = element->FirstChildElement("Material");
         stream << child->GetText() << std::endl;
         stream >> material_id;
-        mesh.material = &materials[material_id - 1];
+        Material* material = &materials[material_id - 1];
 
         child = element->FirstChildElement("Faces");
         stream << child->GetText() << std::endl;
-
+        
+        std::vector<Triangle> faces;
+        
+        // Use these to calculate bounding box edges.
+        float x_min, y_min, z_min, x_max, y_max, z_max;
+        x_min = y_min = z_min = std::numeric_limits<float>::max();
+        x_max = y_max = z_max = std::numeric_limits<float>::min();
+        
         while (!(stream >> v0_id).eof())
         {
             stream >> v1_id >> v2_id;
-            mesh.faces.push_back({
-                    mesh.material,
+            
+            Vec3f current_vertex = vertex_data[v0_id-1];
+            
+            //Calculate mins
+            if (current_vertex.x < x_min)
+                x_min = current_vertex.x;
+            if (current_vertex.y < y_min)
+                y_min = current_vertex.y;
+            if (current_vertex.z < z_min)
+                z_min = current_vertex.z;
+            //calculate maxs
+            if (current_vertex.x > x_max)
+                x_max = current_vertex.x;
+            if (current_vertex.y > y_max)
+                y_max = current_vertex.y;
+            if (current_vertex.z > z_max)
+                z_max = current_vertex.z;
+            
+            current_vertex = vertex_data[v1_id-1];
+            
+            if (current_vertex.x < x_min)
+                x_min = current_vertex.x;
+            if (current_vertex.y < y_min)
+                y_min = current_vertex.y;
+            if (current_vertex.z < z_min)
+                z_min = current_vertex.z;
+            //calculate maxs
+            if (current_vertex.x > x_max)
+                x_max = current_vertex.x;
+            if (current_vertex.y > y_max)
+                y_max = current_vertex.y;
+            if (current_vertex.z > z_max)
+                z_max = current_vertex.z;
+            
+            current_vertex = vertex_data[v2_id-1];
+            
+            if (current_vertex.x < x_min)
+                x_min = current_vertex.x;
+            if (current_vertex.y < y_min)
+                y_min = current_vertex.y;
+            if (current_vertex.z < z_min)
+                z_min = current_vertex.z;
+            //calculate maxs
+            if (current_vertex.x > x_max)
+                x_max = current_vertex.x;
+            if (current_vertex.y > y_max)
+                y_max = current_vertex.y;
+            if (current_vertex.z > z_max)
+                z_max = current_vertex.z;
+            
+            faces.push_back({
+                    material,
                     &vertex_data[v0_id-1],
                     &vertex_data[v1_id-1],
                     &vertex_data[v2_id-1]});
         }
         stream.clear();
 
-        meshes.push_back(mesh);
-        mesh.faces.clear();
+        meshes.push_back(Mesh(material, faces, {x_min, y_min, z_min}, {x_max, y_max, z_max}));
         element = element->NextSiblingElement("Mesh");
     }
     stream.clear();

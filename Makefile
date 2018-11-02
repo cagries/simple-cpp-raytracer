@@ -58,7 +58,7 @@ $(ODIR)/light.o:	 $(IDIR)/light.h $(IDIR)/geometry.h
 	$(CC) -c -o $@ $(SDIR)/light.cpp $(CFLAGS)
 
 $(ODIR)/raytracer.o:	 $(IDIR)/raytracer.h $(IDIR)/parser.h $(SDIR)/raytracer.cpp
-	$(CC) -c -o $@ $(SDIR)/raytracer.cpp $(CFLAGS) $(LDFLAGS)
+	$(CC) -c -o $@ $(SDIR)/raytracer.cpp $(CFLAGS)
 
 
 docs:

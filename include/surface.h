@@ -120,6 +120,11 @@ struct Mesh
 {
     Material *material;
     std::vector<Triangle> faces;
+    
+    Vec3f BV_min, BV_max;
+    
+    Mesh(Material* m, std::vector<Triangle> faces, Vec3f bv_min, Vec3f bv_max):
+        material(m), faces(faces), BV_min(bv_min), BV_max(bv_max) {}
 };
 
 } // namespace rt
