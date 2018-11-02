@@ -29,6 +29,12 @@ Vec3f& Vec3f::operator=(const Vec3f& rhs) {
 */
 
 /*
+Vec3f::Vec3f(Vec3f&& rhs) {
+    x = rhs.x;
+    y = rhs.y;
+    z = rhs.z;
+}
+
 Vec3f& Vec3f::operator+=(const Vec3f& rhs) {
     x += rhs.x;
     y += rhs.y;
@@ -37,7 +43,7 @@ Vec3f& Vec3f::operator+=(const Vec3f& rhs) {
 }
 
 Vec3f& Vec3f::operator-=(const Vec3f& rhs) {
-x -= rhs.x;
+    x -= rhs.x;
     y -= rhs.y;
     z -= rhs.z;
     return *this;
@@ -46,6 +52,20 @@ x -= rhs.x;
 */
 
 /*
+Vec3f& Vec3f::operator=(const Vec3f& rhs) {
+    x = rhs.x;
+    y = rhs.y;
+    z = rhs.z;
+    return *this;
+}
+
+Vec3f& Vec3f::operator=(Vec3f&& rhs) {
+    x = rhs.x;
+    y = rhs.y;
+    z = rhs.z;
+    return *this;
+}
+
 Vec3f operator+(Vec3f lhs, Vec3f rhs) {
     return lhs += rhs;
 }
@@ -80,6 +100,7 @@ constexpr Vec3f operator/(Vec3f lhs, float divisor) {
  * The ray equation.
  */
 /*constexpr Vec3f Ray::operator()(float t) {
+Vec3f Ray::operator()(float t) const {
         Vec3f v = t * d;
         return {e.x + v.x, e.y + v.y, e.z + v.z};
 }
@@ -110,6 +131,19 @@ constexpr Vec3f Vec3f::normalize() {
 }
 
 constexpr Vec3f Vec3f::times(const Vec3f& rhs) const {
+Vec3f Vec3f::normalize() const {
+    float size = norm();
+    return {x / size, y / size, z / size};
+}
+
+float Vec3f::norm() const {
+    if (x == 0 && y == 0 && z == 0)
+        return 0;
+    
+    return sqrt(x * x + y * y + z * z);
+}
+
+Vec3f Vec3f::times(const Vec3f& rhs) const {
     return {x * rhs.x, y * rhs.y, z * rhs.z};
 }
 */

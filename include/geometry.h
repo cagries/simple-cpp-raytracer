@@ -87,7 +87,7 @@ struct Vec3f {
      *
      * @return The norm (length) of this vector.
      */
-    constexpr float norm() const {
+    inline float norm() const {
         return std::sqrt(x*x + y*y + z*z);
     }
 
@@ -96,7 +96,7 @@ struct Vec3f {
      *
      * @return A unit vector in the same direction as this.
      */
-    constexpr Vec3f normalize() {
+    inline Vec3f normalize() {
         float n = std::sqrt(x*x + y*y + z*z);
         return {x / n, y / n, z / n};
     }

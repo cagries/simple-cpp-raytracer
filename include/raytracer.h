@@ -25,6 +25,8 @@ public:
     Vec3f calculateLights(HitRecord hr, Vec3f viewVector) const;
     Vec3f calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVector) const;
     Vec3f clampColor(Vec3f) const;
+private:
+    void trace_helper(unsigned char *image, int cameraIndex, int begin, int end, int index) const;
 };
 
 } // namespace rt

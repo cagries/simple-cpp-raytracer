@@ -3,8 +3,8 @@ IDIR = include
 SDIR = src
 ODIR = build
 
-CFLAGS = -Wall -std=c++14 -Werror -O3 -pg -I$(IDIR)
-LDFLAGS = -lm
+CFLAGS = -Wall -std=c++14 -Werror -O3 -I$(IDIR)
+LDFLAGS = -lm -lpthread
 
 OBJS = geometry.o camera.o parser.o tinyxml2.o ppm.o sphere.o triangle.o light.o raytracer.o
 INCLUDES = geometry.h parser.h surface.h light.h material.h ppm.h tinyxml2.h raytracer.h
@@ -16,7 +16,7 @@ TARGETS = raytracer example
 
 
 raytracer:		$(patsubst %, $(ODIR)/%, $(OBJS) main_raytracer.o)
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
 
 all: $(TARGETS)
 

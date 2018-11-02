@@ -1,8 +1,24 @@
 #include "raytracer.h"
 #include "parser.h"
 #include <iostream>
+#include <thread>
 
 namespace rt {
+
+void RayTracer::trace_helper(unsigned char *image, int cameraIndex, int begin, int end, int index) const {
+    int width = scene.cameras[cameraIndex].plane.width;
+    int height = scene.cameras[cameraIndex].plane.height;
+    for (int i = begin; i < end; i++) {
+        for (int j = 0; j < width; j++) {
+            // Get a normalized ray
+            Ray viewRay = scene.cameras[cameraIndex].generate_ray(j,height-i-1);
+            Vec3f pixelColor = clampColor(calculateColor(viewRay, scene.background_color, 0));
+            image[index++] = pixelColor.x;
+            image[index++] = pixelColor.y;
+            image[index++] = pixelColor.z;
+        }
+    }
+}
 
 void RayTracer::rayTrace(unsigned char *image, int cameraIndex) const {
     int width = scene.cameras[cameraIndex].plane.width;
@@ -20,16 +36,24 @@ void RayTracer::rayTrace(unsigned char *image, int cameraIndex) const {
  *  (0,0) --> *-----------------------*
  *
  */
-    int index = 0;
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            // Get a normalized ray
-            Ray viewRay = scene.cameras[cameraIndex].generate_ray(j,height-i-1);
-            Vec3f pixelColor = clampColor(calculateColor(viewRay, scene.background_color, 0));
-            image[index++] = pixelColor.x;
-            image[index++] = pixelColor.y;
-            image[index++] = pixelColor.z;
-        }
+    std::vector<std::thread> threads;
+
+    constexpr int num_threads = 8;
+    // Call the threads
+    int leap = static_cast<int>(height / num_threads);
+    int jump = static_cast<int>(3 * width * height / num_threads);
+
+    for (int i = 0; i < num_threads; i++) {
+        threads.push_back(
+                std::thread{
+                    [this, image, cameraIndex, leap, jump, i] {
+                        trace_helper(image, cameraIndex, i * leap, (i+1) * leap, i * jump);
+                    }});
+    }
+
+    // Wait for all threads before quitting
+    for (auto& thread : threads) {
+        thread.join();
     }
 }
 
@@ -129,7 +153,6 @@ Vec3f RayTracer::calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVe
     
     //Calculate Diffuse Shading
     color += (1 / (distance * distance)) * dot * (hr.m->diffuse.times(light.intensity));
-//    std::cout << color.x << " " << color.y << " " << color.z << std::endl;
     
     //Calculations of half vector.
     Vec3f h = (lightRay.d + -viewVector);
@@ -143,7 +166,6 @@ Vec3f RayTracer::calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVe
 }
 
 Vec3f RayTracer::clampColor(Vec3f color) const {
-    color.x = (int) color.x;
     if (color.x > 255) color.x = 255;
     if (color.y > 255) color.y = 255;
     if (color.z > 255) color.z = 255;
