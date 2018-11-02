@@ -8,8 +8,6 @@
 #define MATERIAL_H
 
     
-namespace rt {
-
 /**
  * @brief The Material structure.
  */
@@ -22,6 +20,5 @@ struct Material
     float phong_exponent;   //! The phong exponent
 };
 
-} // namespace rt
 
 #endif

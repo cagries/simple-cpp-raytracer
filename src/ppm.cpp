@@ -1,8 +1,6 @@
 #include "ppm.h"
 #include <stdexcept>
 
-namespace ppm {
-
 void write_ppm(const char* filename, unsigned char* data, unsigned int width, unsigned int height)
 {
     FILE *outfile;
@@ -39,5 +37,3 @@ void write_ppm(const char* filename, unsigned char* data, unsigned int width, un
 
     (void) fclose(outfile);
 }
-
-} // namespace ppm

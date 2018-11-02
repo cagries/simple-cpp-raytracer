@@ -2,8 +2,6 @@
 
 #include <cmath>
 
-namespace rt {
-
 // Calculate the normal of the triangle
 Triangle::Triangle(Material* m, Vec3f* a, Vec3f* b, Vec3f* c)
     : Surface{m}, a{a}, b{b}, c{c}
@@ -11,7 +9,7 @@ Triangle::Triangle(Material* m, Vec3f* a, Vec3f* b, Vec3f* c)
     normal = cross((*b - *a), (*c - *a)).normalize();
 }
 
-bool Triangle::hit(Ray ray, HitRecord* rec) const {
+bool Triangle::hit(Ray ray, HitRecord* rec) {
     
     Vec3f ab = *a - *b;
     Vec3f ac = *a - *c;
@@ -73,7 +71,5 @@ bool Triangle::hit(Ray ray, HitRecord* rec) const {
 
     return false;
 }
-
-} // namespace rt
 
 

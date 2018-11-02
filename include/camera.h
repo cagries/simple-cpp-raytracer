@@ -1,12 +1,9 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "geometry.h"
 #include <string>
 #include <vector>
-
-#include "geometry.h"
-
-namespace rt {
 
 /**
  * @brief A rectangular plane of pixels.
@@ -60,13 +57,12 @@ public:
      *
      * @return The Ray passing through the camera and the (i,j)th pixel.
      */
-    Ray generate_ray(int i, int j) const;
+    Ray generate_ray(int i, int j);
 
     Vec3f position, gaze, up;
     Vec3f right;                //! Calculated inside the Camera constructor.
     ImagePlane plane;
 };
 
-} // namespace rt
 
 #endif // CAMERA_H

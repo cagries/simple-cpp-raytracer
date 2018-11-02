@@ -4,7 +4,6 @@
 *.*~
 Makefile~
 *.ppm
-gmon.out
 
 # Skip these directories. 
 test/
@@ -15,4 +14,3 @@ main
 main_raytracer
 tracer
 example
-

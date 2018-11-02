@@ -7,8 +7,6 @@
 #include <vector>
 #include <limits>
 
-namespace rt {
-
 /**
  * @brief A HitRecord stores information for a Surface hit by a Ray.
  */
@@ -18,7 +16,7 @@ struct HitRecord {
     Vec3f pos;    //! The point hit by the Ray.
     Vec3f normal; //! The surface normal for the Surface at \a pos.
     
-    constexpr HitRecord() : t{std::numeric_limits<float>::max()}, m{nullptr} {}
+    HitRecord() : t(std::numeric_limits<float>::max()), m{nullptr} {}
 };
 
 
@@ -30,7 +28,7 @@ struct HitRecord {
  * implement the pure virtual hit function.
  */
 struct Surface {
-    explicit Surface(Material *m) : material{m} {}
+    Surface(Material *m) : material{m} {}
 
     /**
      * @brief Returns true if the given Ray intersects the Surface. If it does, fills out the given HitRecord pointer.
@@ -40,7 +38,7 @@ struct Surface {
      *
      * @return True if the ray hits the surface.
      */
-    virtual bool hit(Ray ray, HitRecord* hr) const = 0;
+    virtual bool hit(Ray ray, HitRecord* hr) = 0;
     
     virtual ~Surface() = default;
 
@@ -69,7 +67,7 @@ struct Triangle : Surface {
     Triangle(Material* material, Vec3f* a, Vec3f* b, Vec3f* c);
 
     
-    bool hit(Ray r, HitRecord*) const;
+    bool hit(Ray r, HitRecord*);
 
 
     Vec3f *a, *b, *c; //! Indices in counter-clockwise order 
@@ -94,7 +92,7 @@ struct Sphere : Surface {
      */
     Sphere(Material*, Vec3f, float);
 
-    bool hit(Ray r, HitRecord*) const;
+    bool hit(Ray r, HitRecord*);
 
     Vec3f center;
     float radius;
@@ -106,9 +104,7 @@ struct Sphere : Surface {
      *
      * @return The surface normal.
      */
-    constexpr Vec3f normal(Vec3f pos) const {
-        return (pos - center) / radius;
-    }
+    Vec3f normal(Vec3f pos);
 };
 
 
@@ -122,6 +118,6 @@ struct Mesh
     std::vector<Triangle> faces;
 };
 
-} // namespace rt
+
 
 #endif // surface.h

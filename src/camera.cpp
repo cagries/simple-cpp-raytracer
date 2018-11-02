@@ -4,8 +4,6 @@
 #include <vector>
 #include <string>
 
-namespace rt {
-
 /**
  * @brief ImagePlane constructor.
  *
@@ -44,7 +42,7 @@ Camera::Camera(Vec3f pos, Vec3f gaze, Vec3f up, ImagePlane plane)
  *
  * @return 
  */
-Ray Camera::generate_ray(int i, int j) const
+Ray Camera::generate_ray(int i, int j)
 {
     double u = plane.bounds.l + (plane.bounds.r - plane.bounds.l) * (i + 0.5) / plane.width;
     double v = plane.bounds.b + (plane.bounds.t - plane.bounds.b) * (j + 0.5) / plane.height;
@@ -54,6 +52,4 @@ Ray Camera::generate_ray(int i, int j) const
     r.e = position;
     return r;
 }
-
-} // namespace rt
 

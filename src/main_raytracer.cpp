@@ -12,10 +12,10 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    rt::Scene sc;
+    Scene sc;
     sc.loadFromXml(argv[1]);
     
-    rt::RayTracer rt;
+    RayTracer rt;
     rt.scene = sc;
     
     int width;
@@ -36,7 +36,7 @@ int main(int argc, char** argv)
         width = rt.scene.cameras[a].plane.width;
         height = rt.scene.cameras[a].plane.height;
         
-        ppm::write_ppm(sc.cameras[a].plane.image_name.data(), image, width, height);
+        write_ppm(sc.cameras[a].plane.image_name.data(), image, width, height);
     }
     
      

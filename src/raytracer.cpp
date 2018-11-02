@@ -2,9 +2,7 @@
 #include "parser.h"
 #include <iostream>
 
-namespace rt {
-
-void RayTracer::rayTrace(unsigned char *image, int cameraIndex) const {
+void RayTracer::rayTrace(unsigned char *image, int cameraIndex) {
     int width = scene.cameras[cameraIndex].plane.width;
     int height = scene.cameras[cameraIndex].plane.height;
     
@@ -33,8 +31,11 @@ void RayTracer::rayTrace(unsigned char *image, int cameraIndex) const {
     }
 }
 
-Vec3f RayTracer::calculateColor(Ray viewRay, Vec3f positionColor ,int recursionLevel) const {
+Vec3f RayTracer::calculateColor(Ray viewRay, Vec3f positionColor ,int recursionLevel) {
+//    std::cout << "My recursion level: " + std::to_string(recursionLevel) << std::endl;
+//    std::cout << "MaxRecursionDepth: " + std::to_string(scene.max_recursion_depth) << std::endl;
     if (recursionLevel <= scene.max_recursion_depth) {
+//        std::cout << "Passed recursion test." << std::endl;
         bool hitFlag = false;
         HitRecord hr;
         for (size_t i = 0; i < scene.triangles.size(); i++) {
@@ -58,22 +59,32 @@ Vec3f RayTracer::calculateColor(Ray viewRay, Vec3f positionColor ,int recursionL
         }
         
         if (hitFlag) {
+//            std::cout << "Hit an object." << std::endl;
+            
             if (hr.m->mirror.norm() > 0) {
+//                std::cout << "Going to reflect." << std::endl;
                 Vec3f reflectionVector = viewRay.d - 2.0f * (hr.normal * viewRay.d) * hr.normal;
                 Ray reflectionRay;
                 reflectionRay.d = reflectionVector.normalize();
                 reflectionRay.e = hr.pos + scene.shadow_ray_epsilon * reflectionVector;
                 
+ //               std::cout << "my HitRecord pos: " << std::to_string(hr.pos.x) << " " << std::to_string(hr.pos.y) << " " << std::to_string(hr.pos.z) << std::endl;
+                
+//                std::cout << "my HitRecord material: " << std::to_string(hr.m->mirror.x) << " " << std::to_string(hr.m->mirror.y) << " " << std::to_string(hr.m->mirror.z) << std::endl;
+                
                 positionColor += hr.m->mirror.times(calculateColor(reflectionRay, scene.background_color, recursionLevel + 1));
             }
+            
+//            std::cout << "Returning calculateLight color: " << std::to_string(calculateLights(hr, viewRay.d).x) << " " << std::to_string(calculateLights(hr, viewRay.d).y) << " " << std::to_string(calculateLights(hr, viewRay.d).z) << std::endl;
             
             positionColor += calculateLights(hr, viewRay.d);
         }
     }
+//    std::cout << "Returning positionColor: " << std::to_string(positionColor.x) << " " << std::to_string(positionColor.y) << " " << std::to_string(positionColor.z) << std::endl;
     return positionColor;
 }
 
-Vec3f RayTracer::calculateLights(HitRecord hr, Vec3f viewVector) const {
+Vec3f RayTracer::calculateLights(HitRecord hr, Vec3f viewVector) {
     
     Vec3f color = hr.m->ambient.times(scene.ambient_light);
     
@@ -85,7 +96,7 @@ Vec3f RayTracer::calculateLights(HitRecord hr, Vec3f viewVector) const {
  
 }
 
-Vec3f RayTracer::calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVector) const {
+Vec3f RayTracer::calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVector) {
     Vec3f color = {0, 0, 0};
     Vec3f lightVector = light.position - hr.pos;
     
@@ -142,7 +153,7 @@ Vec3f RayTracer::calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVe
     return color;
 }
 
-Vec3f RayTracer::clampColor(Vec3f color) const {
+Vec3f RayTracer::clampColor(Vec3f color) {
     color.x = (int) color.x;
     if (color.x > 255) color.x = 255;
     if (color.y > 255) color.y = 255;
@@ -150,5 +161,5 @@ Vec3f RayTracer::clampColor(Vec3f color) const {
     return color;
 }
 
-} // namespace rt
+
 

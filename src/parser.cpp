@@ -6,8 +6,6 @@
 #include <stdexcept>
 #include <iostream>
 
-namespace rt {
-
 void Scene::loadFromXml(const std::string& filepath)
 {
     tinyxml2::XMLDocument file;
@@ -245,6 +243,5 @@ void Scene::loadFromXml(const std::string& filepath)
         spheres.push_back({&materials[material_id-1], vertex_data[center_vertex_id-1], radius});
         element = element->NextSiblingElement("Sphere");
     }
-}
 
-} // namespace rt
+}
