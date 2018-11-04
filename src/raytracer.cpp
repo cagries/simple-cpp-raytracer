@@ -157,9 +157,11 @@ Vec3f RayTracer::calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVe
     }
     
     for (size_t i = 0; i < scene.meshes.size(); i++) {
-        for (auto& triangle : scene.meshes[i].faces) {
-            if (triangle.hit(lightRay, &shadowRec)) {
-                shadowHitFlag = true;
+        if (scene.meshes[i].hit(lightRay, nullptr)) {
+            for (auto& triangle : scene.meshes[i].faces) {
+                if (triangle.hit(lightRay, &shadowRec)) {
+                    shadowHitFlag = true;
+                }
             }
         }
     }
