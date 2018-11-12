@@ -7,6 +7,8 @@
 #include <vector>
 #include <limits>
 
+namespace rt {
+
 /**
  * @brief A HitRecord stores information for a Surface hit by a Ray.
  */
@@ -38,7 +40,9 @@ struct Surface {
      *
      * @return True if the ray hits the surface.
      */
-    virtual bool hit(Ray ray, HitRecord* hr) = 0;
+    virtual bool hit(Ray ray, HitRecord* hr) const = 0;
+
+    // virtual Box bounding_box() const = 0;
     
     virtual ~Surface() = default;
 
@@ -67,7 +71,7 @@ struct Triangle : Surface {
     Triangle(Material* material, Vec3f* a, Vec3f* b, Vec3f* c);
 
     
-    bool hit(Ray r, HitRecord*);
+    bool hit(Ray r, HitRecord*) const;
 
 
     Vec3f *a, *b, *c; //! Indices in counter-clockwise order 
@@ -92,7 +96,7 @@ struct Sphere : Surface {
      */
     Sphere(Material*, Vec3f, float);
 
-    bool hit(Ray r, HitRecord*);
+    bool hit(Ray r, HitRecord*) const;
 
     Vec3f center;
     float radius;
@@ -104,7 +108,7 @@ struct Sphere : Surface {
      *
      * @return The surface normal.
      */
-    Vec3f normal(Vec3f pos);
+    Vec3f normal(Vec3f pos) const;
 };
 
 
@@ -112,12 +116,19 @@ struct Sphere : Surface {
 /**
  * @brief The Mesh class is a collection of Triangle objects.
  */
-struct Mesh
+struct Mesh : Surface
 {
-    Material *material;
     std::vector<Triangle> faces;
+    Vec3f BV_min, BV_max;
+    
+    Mesh(Material* m, std::vector<Triangle> faces, Vec3f bv_min, Vec3f bv_max);
+
+
+    bool hit(Ray ray, HitRecord* hr) const;
+
+    ~Mesh() = default;
 };
 
-
+} // namespace rt
 
 #endif // surface.h

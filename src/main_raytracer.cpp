@@ -4,6 +4,7 @@
 #include "ppm.h"
 
 #include <iostream>
+#include <memory>
 
 int main(int argc, char** argv)
 {
@@ -12,10 +13,10 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    Scene sc;
+    rt::Scene sc;
     sc.loadFromXml(argv[1]);
     
-    RayTracer rt;
+    rt::RayTracer rt;
     rt.scene = sc;
     
     int width;
@@ -28,17 +29,19 @@ int main(int argc, char** argv)
             max = x;
     }
 
-    unsigned char* image = new unsigned char [max * 3];
+    // unsigned char* image> = new unsigned char [max * 3];
+    auto image = std::make_unique<unsigned char[]>(max * 3);
     
     for (size_t a = 0; a < sc.cameras.size(); a++) {
-        rt.rayTrace(image, a);
+        rt.rayTrace(image.get(), a);
         
         width = rt.scene.cameras[a].plane.width;
         height = rt.scene.cameras[a].plane.height;
         
-        write_ppm(sc.cameras[a].plane.image_name.data(), image, width, height);
+        ppm::write_ppm(sc.cameras[a].plane.image_name.data(), image.get(), width, height);
     }
-    
-     
+
+    // delete[] image;
+
     return 0;
 }

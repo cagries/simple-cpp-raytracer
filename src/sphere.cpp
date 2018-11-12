@@ -4,13 +4,15 @@
 
 #include <iostream>
 
+namespace rt {
+
 Sphere::Sphere(Material *material, Vec3f center, float radius)
     : Surface{material}, center{center}, radius{radius}
 {}
 
 
 
-bool Sphere::hit(Ray ray, HitRecord* hr)
+bool Sphere::hit(Ray ray, HitRecord* hr) const
 {
     float discriminant = pow(ray.d * (ray.e - center), 2) - (ray.d * ray.d) * ((ray.e - center) * (ray.e - center) - radius * radius);
 
@@ -66,8 +68,8 @@ bool Sphere::hit(Ray ray, HitRecord* hr)
 }
 
 
-Vec3f Sphere::normal(Vec3f p) {
-    //return (p - center).normalize();
+Vec3f Sphere::normal(Vec3f p) const {
     return (p - center) / radius;
 }
 
+} // namespace rt
