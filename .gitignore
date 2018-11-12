@@ -4,13 +4,12 @@
 *.*~
 Makefile~
 *.ppm
+gmon.out
+__pycache__
 
 # Skip these directories. 
 test/
 
-# Skip these executables.
-
-main
-main_raytracer
-tracer
-example
+# Skip these files as well
+raytracer
+raytracer.tar.gz
