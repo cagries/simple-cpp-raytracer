@@ -1,5 +1,5 @@
 # RayTracer
-This is a basic, single-threaded ray tracer written in C++. 
+This is a basic, multi-threaded ray tracer written in C++. Ambient light, diffuse shading, Blinn-Phong shading, hard shadows and light reflections can be simulated. Sphere, triangles and triangle meshes are supported. Although it has to be further developed, basic bonding volume hierarchy has been implemented. Code has been compiler specific optimized.
 
 ## Quick start
 
