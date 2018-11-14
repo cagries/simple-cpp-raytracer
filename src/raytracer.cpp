@@ -50,15 +50,24 @@ void RayTracer::rayTrace(unsigned char *image, const Camera& c) const {
     std::vector<std::thread> threads;
 
     constexpr int num_threads = 8;
-    // Call the threads
-    int leap = static_cast<int>(height / num_threads);
-    int jump = static_cast<int>(3 * width * height / num_threads);
+    const int leap = height / num_threads;
+    const int jump = 3 * width * leap;
 
+    // Call the threads
     for (int i = 0; i < num_threads; i++) {
         threads.push_back(
                 std::thread{
                     [this, image, c, leap, jump, i] {
                         trace_helper(image, c, i * leap, (i+1) * leap, i * jump);
+                    }});
+    }
+
+    // Open a final thread if height not divisible by num_threads
+    if (height % num_threads) {
+         threads.push_back(std::thread{
+                    [this, image, c, leap, jump, height] {
+                        trace_helper(image, c, leap * num_threads,
+                                height, jump * num_threads);
                     }});
     }
 
