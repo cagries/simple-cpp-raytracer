@@ -116,10 +116,17 @@ struct Sphere : Surface {
 /**
  * @brief The Mesh class is a collection of Triangle objects.
  */
-struct Mesh
+struct Mesh : Surface
 {
-    Material *material;
     std::vector<Triangle> faces;
+    Vec3f BV_min, BV_max;
+    
+    Mesh(Material* m, std::vector<Triangle> faces, Vec3f bv_min, Vec3f bv_max);
+
+
+    bool hit(Ray ray, HitRecord* hr) const;
+
+    ~Mesh() = default;
 };
 
 } // namespace rt

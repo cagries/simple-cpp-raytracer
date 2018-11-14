@@ -6,13 +6,14 @@ ODIR = build
 CFLAGS = -Wall -std=c++14 -Werror -I$(IDIR) -O3
 LDFLAGS = -lm -lpthread
 
-OBJS = geometry.o camera.o parser.o tinyxml2.o ppm.o sphere.o triangle.o light.o raytracer.o
+OBJS = geometry.o camera.o parser.o tinyxml2.o ppm.o sphere.o triangle.o light.o raytracer.o mesh.o
 INCLUDES = geometry.h parser.h surface.h light.h material.h ppm.h tinyxml2.h raytracer.h
 
 DOXYGEN_CONFIG = Doxyfile
-.PHONY:	clean docs all
+.PHONY:	clean docs all debug
 
 TARGETS = raytracer example
+
 
 
 raytracer:		$(patsubst %, $(ODIR)/%, $(OBJS) main_raytracer.o)
@@ -57,8 +58,11 @@ $(ODIR)/triangle.o:	 $(IDIR)/surface.h
 $(ODIR)/light.o:	 $(IDIR)/light.h $(IDIR)/geometry.h
 	$(CC) -c -o $@ $(SDIR)/light.cpp $(CFLAGS)
 
+$(ODIR)/mesh.o:	 $(IDIR)/surface.h $(SDIR)/mesh.cpp
+	$(CC) -c -o $@ $(SDIR)/mesh.cpp $(CFLAGS)
+
 $(ODIR)/raytracer.o:	 $(IDIR)/raytracer.h $(IDIR)/parser.h $(SDIR)/raytracer.cpp
-	$(CC) -c -o $@ $(SDIR)/raytracer.cpp $(CFLAGS) $(LDFLAGS)
+	$(CC) -c -o $@ $(SDIR)/raytracer.cpp $(CFLAGS)
 
 
 docs:
