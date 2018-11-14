@@ -17,17 +17,22 @@ namespace rt {
  */
 class RayTracer {
 public:
-    Scene scene;
 
     explicit RayTracer(const char* filename);
     
-    void rayTrace(unsigned char *image, int cameraIndex) const;
+    void rayTrace(unsigned char *image, const Camera& camera) const;
     Vec3f calculateColor(Ray r, Vec3f positionColor, int recursionLevel) const;
     Vec3f calculateLights(HitRecord hr, Vec3f viewVector) const;
     Vec3f calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVector) const;
     Vec3f clampColor(Vec3f) const;
+
+    const std::vector<Camera>& get_cameras() const {
+        return scene.cameras;
+    }
+    
 private:
-    void trace_helper(unsigned char *image, int cameraIndex, int begin, int end, int index) const;
+    Scene scene;
+    void trace_helper(unsigned char *image, const Camera& camera, int begin, int end, int index) const;
 };
 
 } // namespace rt

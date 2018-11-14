@@ -251,8 +251,8 @@ void Scene::loadFromXml(const std::string& filepath)
         }
         stream.clear();
 
-        surfaces.push_back(std::move(std::make_unique<Mesh>(
-                    Mesh(material, faces, {x_min, y_min, z_min}, {x_max, y_max, z_max}))));
+        surfaces.emplace_back(std::make_unique<Mesh>(
+                    Mesh(material, faces, {x_min, y_min, z_min}, {x_max, y_max, z_max})));
 
         element = element->NextSiblingElement("Mesh");
     }
@@ -273,9 +273,9 @@ void Scene::loadFromXml(const std::string& filepath)
         stream << child->GetText() << std::endl;
         stream >> v0_id >> v1_id >> v2_id;
 
-        surfaces.push_back(std::move(std::make_unique<Triangle>(
+        surfaces.emplace_back(std::make_unique<Triangle>(
                     Triangle{&materials[material_id-1],
-                    &vertex_data[v0_id-1], &vertex_data[v1_id-1], &vertex_data[v2_id-1]})));
+                    &vertex_data[v0_id-1], &vertex_data[v1_id-1], &vertex_data[v2_id-1]}));
 
         element = element->NextSiblingElement("Triangle");
     }
@@ -303,8 +303,8 @@ void Scene::loadFromXml(const std::string& filepath)
         stream << child->GetText() << std::endl;
         stream >> radius;
 
-        surfaces.push_back(std::move(std::make_unique<Sphere>(
-                    Sphere{&materials[material_id-1], vertex_data[center_vertex_id-1], radius})));
+        surfaces.emplace_back(std::make_unique<Sphere>(
+                    Sphere{&materials[material_id-1], vertex_data[center_vertex_id-1], radius}));
         element = element->NextSiblingElement("Sphere");
     }
 }

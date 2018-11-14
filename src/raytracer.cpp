@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <thread>
-#include <future>
 
 namespace rt {
 
@@ -12,13 +11,18 @@ RayTracer::RayTracer(const char* filename) {
     scene.loadFromXml(filename);
 }
 
-void RayTracer::trace_helper(unsigned char *image, int cameraIndex, int begin, int end, int index) const {
-    int width = scene.cameras[cameraIndex].plane.width;
-    int height = scene.cameras[cameraIndex].plane.height;
+// inline const std::vector<Camera>& RayTracer::get_cameras() const {
+//  return scene.cameras;
+// }
+
+
+void RayTracer::trace_helper(unsigned char *image, const Camera& c, int begin, int end, int index) const {
+    int width = c.plane.width;
+    int height = c.plane.height;
     for (int i = begin; i < end; i++) {
         for (int j = 0; j < width; j++) {
             // Get a normalized ray
-            Ray viewRay = scene.cameras[cameraIndex].generate_ray(j,height-i-1);
+            Ray viewRay = c.generate_ray(j,height-i-1);
             Vec3f pixelColor = clampColor(calculateColor(viewRay, scene.background_color, 0));
             image[index++] = pixelColor.x;
             image[index++] = pixelColor.y;
@@ -26,9 +30,9 @@ void RayTracer::trace_helper(unsigned char *image, int cameraIndex, int begin, i
         }
     }
 }
-void RayTracer::rayTrace(unsigned char *image, int cameraIndex) const {
-    int width = scene.cameras[cameraIndex].plane.width;
-    int height = scene.cameras[cameraIndex].plane.height;
+void RayTracer::rayTrace(unsigned char *image, const Camera& c) const {
+    int width = c.plane.width;
+    int height = c.plane.height;
     
     /**
      * The book's image plane indexing is different from the slides.
@@ -53,8 +57,8 @@ void RayTracer::rayTrace(unsigned char *image, int cameraIndex) const {
     for (int i = 0; i < num_threads; i++) {
         threads.push_back(
                 std::thread{
-                    [this, image, cameraIndex, leap, jump, i] {
-                        trace_helper(image, cameraIndex, i * leap, (i+1) * leap, i * jump);
+                    [this, image, c, leap, jump, i] {
+                        trace_helper(image, c, i * leap, (i+1) * leap, i * jump);
                     }});
     }
 
