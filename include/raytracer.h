@@ -18,6 +18,8 @@ namespace rt {
 class RayTracer {
 public:
     Scene scene;
+
+    explicit RayTracer(const char* filename);
     
     void rayTrace(unsigned char *image, int cameraIndex) const;
     Vec3f calculateColor(Ray r, Vec3f positionColor, int recursionLevel) const;

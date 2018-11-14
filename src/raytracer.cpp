@@ -7,6 +7,11 @@
 
 namespace rt {
 
+
+RayTracer::RayTracer(const char* filename) {
+    scene.loadFromXml(filename);
+}
+
 void RayTracer::trace_helper(unsigned char *image, int cameraIndex, int begin, int end, int index) const {
     int width = scene.cameras[cameraIndex].plane.width;
     int height = scene.cameras[cameraIndex].plane.height;

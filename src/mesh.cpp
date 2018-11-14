@@ -56,7 +56,6 @@ bool Mesh::hit(Ray ray, HitRecord* hr) const {
 
     for (const auto& face : faces) {
         if (face.hit(ray, hr)) {
-            // We hit this triangle
             hitFlag = true;
         }
     }
