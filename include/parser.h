@@ -9,6 +9,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "geometry.h"
 #include "camera.h"
@@ -37,6 +38,8 @@ struct Scene
     std::vector<Mesh> meshes;
     std::vector<Triangle> triangles;
     std::vector<Sphere> spheres;
+
+    std::vector<std::unique_ptr<Surface>> surfaces;
 };
 
 } // namespace rt
