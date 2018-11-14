@@ -3,17 +3,26 @@
 
 #include <iostream>
 #include <thread>
-#include <future>
 
 namespace rt {
 
-void RayTracer::trace_helper(unsigned char *image, int cameraIndex, int begin, int end, int index) const {
-    int width = scene.cameras[cameraIndex].plane.width;
-    int height = scene.cameras[cameraIndex].plane.height;
+
+RayTracer::RayTracer(const char* filename) {
+    scene.loadFromXml(filename);
+}
+
+// inline const std::vector<Camera>& RayTracer::get_cameras() const {
+//  return scene.cameras;
+// }
+
+
+void RayTracer::trace_helper(unsigned char *image, const Camera& c, int begin, int end, int index) const {
+    int width = c.plane.width;
+    int height = c.plane.height;
     for (int i = begin; i < end; i++) {
         for (int j = 0; j < width; j++) {
             // Get a normalized ray
-            Ray viewRay = scene.cameras[cameraIndex].generate_ray(j,height-i-1);
+            Ray viewRay = c.generate_ray(j,height-i-1);
             Vec3f pixelColor = clampColor(calculateColor(viewRay, scene.background_color, 0));
             image[index++] = pixelColor.x;
             image[index++] = pixelColor.y;
@@ -21,36 +30,23 @@ void RayTracer::trace_helper(unsigned char *image, int cameraIndex, int begin, i
         }
     }
 }
-void RayTracer::rayTrace(unsigned char *image, int cameraIndex) const {
-    int width = scene.cameras[cameraIndex].plane.width;
-    int height = scene.cameras[cameraIndex].plane.height;
+void RayTracer::rayTrace(unsigned char *image, const Camera& c) const {
+    int width = c.plane.width;
+    int height = c.plane.height;
     
-/**
- * The book's image plane indexing is different from the slides.
- * Thus we have
- *
- *                            
- *            *-----------------------* <-- (n_x-1, n_y-1)
- *            |                       |
- *            |                       |
- *            |                       |
- *  (0,0) --> *-----------------------*
- *
- */
-    /*
-    int index = 0;
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            // Get a normalized ray
-            Ray viewRay = scene.cameras[cameraIndex].generate_ray(j,height-i-1);
-            Vec3f pixelColor = clampColor(calculateColor(viewRay, scene.background_color, 0));
-            image[index++] = pixelColor.x;
-            image[index++] = pixelColor.y;
-            image[index++] = pixelColor.z;
-        }
-    }
-
-    */
+    /**
+     * The book's image plane indexing is different from the slides.
+     * Thus we have
+     *
+     *                            
+     *            *-----------------------* <-- (n_x-1, n_y-1)
+     *            |                       |
+     *            |                       |
+     *            |                       |
+     *  (0,0) --> *-----------------------*
+     *
+     */
+    
     std::vector<std::thread> threads;
 
     constexpr int num_threads = 8;
@@ -61,8 +57,8 @@ void RayTracer::rayTrace(unsigned char *image, int cameraIndex) const {
     for (int i = 0; i < num_threads; i++) {
         threads.push_back(
                 std::thread{
-                    [this, image, cameraIndex, leap, jump, i] {
-                        trace_helper(image, cameraIndex, i * leap, (i+1) * leap, i * jump);
+                    [this, image, c, leap, jump, i] {
+                        trace_helper(image, c, i * leap, (i+1) * leap, i * jump);
                     }});
     }
 
@@ -77,25 +73,10 @@ Vec3f RayTracer::calculateColor(Ray viewRay, Vec3f positionColor ,int recursionL
     if (recursionLevel <= scene.max_recursion_depth) {
         bool hitFlag = false;
         HitRecord hr;
-        for (size_t i = 0; i < scene.triangles.size(); i++) {
-            if (scene.triangles[i].hit(viewRay, &hr)) {
+
+        for (const auto& surface : scene.surfaces) {
+            if (surface.get()->hit(viewRay, &hr)) {
                 hitFlag = true;
-            }
-        }
-        
-        for (size_t i = 0; i < scene.spheres.size(); i++) {
-            if (scene.spheres[i].hit(viewRay, &hr)) {
-                hitFlag = true;
-            }
-        }
-        
-        for (size_t i = 0; i < scene.meshes.size(); i++) {
-            if (scene.meshes[i].hit(viewRay, nullptr)) {
-                for (auto& triangle : scene.meshes[i].faces) {
-                    if (triangle.hit(viewRay, &hr)) {
-                        hitFlag = true;
-                    }
-                }
             }
         }
         
@@ -120,26 +101,11 @@ Vec3f RayTracer::calculateLights(HitRecord hr, Vec3f viewVector) const {
     
     Vec3f color = hr.m->ambient.times(scene.ambient_light);
     
-    std::vector<std::future<Vec3f>> futures;
-
     for (size_t i = 0; i < scene.point_lights.size(); i++) {
         color += calculateEachLight(hr, scene.point_lights[i], viewVector);
-        
-        /*
-        color += std::async(std::launch::async, [&, this, hr, i, viewVector] { 
-                return calculateEachLight(hr, scene.point_lights[i], viewVector);
-            });
-            */
     }
    
-    /*
-    for (auto& future: futures) {
-        color += future.get();
-    }
-    */
-
     return color;
- 
 }
 
 Vec3f RayTracer::calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVector) const {
@@ -160,25 +126,9 @@ Vec3f RayTracer::calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVe
     //Shadows
     HitRecord shadowRec;
     bool shadowHitFlag = false;
-    for (size_t i = 0; i < scene.spheres.size(); i++) {
-        if (scene.spheres[i].hit(lightRay, &shadowRec)) {
-            shadowHitFlag = true;
-        }
-    }
-    
-    for (size_t i = 0; i < scene.triangles.size(); i++) {
-        if (scene.triangles[i].hit(lightRay, &shadowRec)) {
-            shadowHitFlag = true;
-        }
-    }
-    
-    for (size_t i = 0; i < scene.meshes.size(); i++) {
-        if (scene.meshes[i].hit(lightRay, nullptr)) {
-            for (auto& triangle : scene.meshes[i].faces) {
-                if (triangle.hit(lightRay, &shadowRec)) {
-                    shadowHitFlag = true;
-                }
-            }
+    for (const auto& surface : scene.surfaces) {
+        if (surface.get()->hit(lightRay, &shadowRec)) {
+            shadowHitFlag = false;
         }
     }
     

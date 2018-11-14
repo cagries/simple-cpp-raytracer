@@ -1,5 +1,3 @@
-#include "camera.h"
-#include "parser.h"
 #include "raytracer.h"
 #include "ppm.h"
 
@@ -13,35 +11,28 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    rt::Scene sc;
-    sc.loadFromXml(argv[1]);
-    
-    rt::RayTracer rt;
-    rt.scene = sc;
+    rt::RayTracer tracer(argv[1]);
     
     int width;
     int height;
 
     int max = 0;
-    for (size_t i = 0; i < sc.cameras.size(); i++) {
-        int x = sc.cameras[i].plane.width * sc.cameras[i].plane.height;
+    for (const auto& camera : tracer.get_cameras()) {
+        int x = camera.plane.width * camera.plane.height;
         if (x > max)
             max = x;
     }
 
-    // unsigned char* image> = new unsigned char [max * 3];
     auto image = std::make_unique<unsigned char[]>(max * 3);
     
-    for (size_t a = 0; a < sc.cameras.size(); a++) {
-        rt.rayTrace(image.get(), a);
+    for (const auto& camera : tracer.get_cameras()) {
+        tracer.rayTrace(image.get(), camera);
         
-        width = rt.scene.cameras[a].plane.width;
-        height = rt.scene.cameras[a].plane.height;
+        width = camera.plane.width;
+        height = camera.plane.height;
         
-        ppm::write_ppm(sc.cameras[a].plane.image_name.data(), image.get(), width, height);
+        ppm::write_ppm(camera.plane.image_name.data(), image.get(), width, height);
     }
-
-    // delete[] image;
 
     return 0;
 }

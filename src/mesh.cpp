@@ -6,6 +6,7 @@ Mesh::Mesh(Material* m, std::vector<Triangle> faces, Vec3f bv_min, Vec3f bv_max)
     : Surface{m},  faces{faces}, BV_min(bv_min), BV_max(bv_max) {}
 
 bool Mesh::hit(Ray ray, HitRecord* hr) const {
+    // Check if we actually hit the mesh
     float a = 1 / ray.d.x;
     float b = 1 / ray.d.y;
     float c = 1 / ray.d.z;
@@ -43,7 +44,22 @@ bool Mesh::hit(Ray ray, HitRecord* hr) const {
     float t_min = std::max(std::max(t_xmin, t_ymin), t_zmin);
     float t_max = std::min(std::min(t_xmax, t_ymax), t_zmax);
 
-    return t_min <= t_max;
+    // Terminate early if not hit
+    if (t_min > t_max) {
+        return false;
+    }
+
+    // Find the triangle which is hit by the ray.
+    // If we can't find such a triangle, then return false
+    
+    bool hitFlag = false;
+
+    for (const auto& face : faces) {
+        if (face.hit(ray, hr)) {
+            hitFlag = true;
+        }
+    }
+    return hitFlag;
 }
 
 } // namespace rt
