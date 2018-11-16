@@ -8,8 +8,5 @@ gmon.out
 __pycache__
 
 # Skip these directories. 
-test/
-
-# Skip these files as well
-raytracer
-raytracer.tar.gz
+build/
+bin/
