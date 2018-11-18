@@ -1,13 +1,15 @@
-#include "raytracer.h"
-#include "ppm.h"
-
 #include <iostream>
-#include <memory>
+#include <vector>
+
+#include "raytracer.h"
+
+#include "lodepng.h"
+#include "ppm.h"
 
 int main(int argc, char** argv)
 {
     if (argc < 2) {
-        std::cerr << "Usage: ./main <scene_file>" << std::endl;
+        std::cerr << "Usage: raytracer <scene_file>" << std::endl;
         return 1;
     }
 
@@ -23,15 +25,15 @@ int main(int argc, char** argv)
             max = x;
     }
 
-    auto image = std::make_unique<unsigned char[]>(max * 3);
+    auto image = std::vector<unsigned char>(max * 4);
     
     for (const auto& camera : tracer.get_cameras()) {
-        tracer.rayTrace(image.get(), camera);
+        tracer.rayTrace(image.data(), camera);
         
         width = camera.plane.width;
         height = camera.plane.height;
         
-        ppm::write_ppm(camera.plane.image_name.data(), image.get(), width, height);
+        ppm::write_ppm(camera.plane.image_name.data(), image.data(), width, height);
     }
 
     return 0;

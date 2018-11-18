@@ -1,6 +1,10 @@
 # Find header files
-include_directories("${PROJECT_SOURCE_DIR}/include")
+include_directories("${PROJECT_SOURCE_DIR}/include"
+    "${PROJECT_SOURCE_DIR}/src/lodepng"
+    "${PROJECT_SOURCE_DIR}/src/tinyxml2"
+    )
 
+# Find lodepng header
 # Files to use for 'raytracer' (except the main file)
 set (RT_SOURCES "camera.cpp"
     "geometry.cpp"
@@ -10,12 +14,13 @@ set (RT_SOURCES "camera.cpp"
     "ppm.cpp"
     "raytracer.cpp"
     "sphere.cpp"
-    "tinyxml2.cpp"
     "triangle.cpp"
+    "${PROJECT_SOURCE_DIR}/src/lodepng/lodepng.cpp"
+    "${PROJECT_SOURCE_DIR}/src/tinyxml2/tinyxml2.cpp"
 )
 
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Werror -Wpedantic -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Werror -Wpedantic -O3 -Wextra")
 
 # Output the created libraries and executables in these directories
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib/")

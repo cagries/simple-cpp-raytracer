@@ -4,6 +4,12 @@ This is a basic, multi-threaded ray tracer written in C++14. Currently ambient l
 
 ## Quick start
 
+Download the repository and its submodules by running
+
+```
+$ git clone --recurse-submodules https://github.com/cagries/simple-cpp-raytracer.git
+```
+
 You need CMake (minimum version 3.2) to build the project. Head on to [cmake.org](https://cmake.org/download) to download it.
 
 To build the project, run the following commands from the project root directory:
