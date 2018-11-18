@@ -11,10 +11,6 @@ RayTracer::RayTracer(const char* filename) {
     scene.loadFromXml(filename);
 }
 
-// inline const std::vector<Camera>& RayTracer::get_cameras() const {
-//  return scene.cameras;
-// }
-
 
 void RayTracer::trace_helper(unsigned char *image, const Camera& c, int begin, int end, int index) const {
     int width = c.plane.width;
@@ -27,6 +23,7 @@ void RayTracer::trace_helper(unsigned char *image, const Camera& c, int begin, i
             image[index++] = pixelColor.x;
             image[index++] = pixelColor.y;
             image[index++] = pixelColor.z;
+            image[index++] = 0xff;          // Pixels are opaque.
         }
     }
 }
@@ -50,8 +47,8 @@ void RayTracer::rayTrace(unsigned char *image, const Camera& c) const {
     std::vector<std::thread> threads;
 
     constexpr int num_threads = 8;
-    const int leap = height / num_threads;
-    const int jump = 3 * width * leap;
+    int leap = static_cast<int>(height / num_threads);
+    int jump = static_cast<int>(4 * width * height / num_threads);
 
     // Call the threads
     for (int i = 0; i < num_threads; i++) {

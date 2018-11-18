@@ -1,0 +1,4 @@
+# Do not ignore these
+!.gitignore
+!*.cpp
+!cosine.py

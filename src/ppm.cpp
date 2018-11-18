@@ -19,9 +19,13 @@ void write_ppm(const char* filename, unsigned char* data, unsigned int width, un
     {
         for (size_t i = 0; i < width; ++i)
         {
-            for (size_t c = 0; c < 3; ++c, ++idx)
+            for (size_t c = 0; c < 4; ++c, ++idx)
             {
                 color = data[idx];
+
+                // Alpha not used in any variant of PPM
+                if (c == 3)
+                    continue;
 
                 if (i == width - 1 && c == 2)
                 {
