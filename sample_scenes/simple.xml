@@ -13,7 +13,7 @@
             <NearPlane>-1 1 -1 1</NearPlane>
             <NearDistance>1</NearDistance>
             <ImageResolution>800 800</ImageResolution>
-            <ImageName>simple.ppm</ImageName>
+            <ImageName>simple.png</ImageName>
         </Camera>
     </Cameras>
 

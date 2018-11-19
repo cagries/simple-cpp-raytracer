@@ -1,8 +1,21 @@
-# basic-cpp-raytracer
+# simple-cpp-raytracer
 
-This is a basic, multi-threaded ray tracer written in C++14. Currently ambient light, diffuse shading, Blinn-Phong shading, hard shadows and light reflections can be simulated. Sphere, triangles and triangle meshes are supported. Although it has to be further developed, basic bonding volume hierarchy has been implemented. Code has been compiler specific optimized.
+This is a simple, MIT-licensed multi-threaded ray tracer written in C++14.
 
-## Quick start
+## Requirements
+
+`simple-cpp-raytracer` requires the CMake (version >= 3.0.2) build system. Head on to [cmake.org](https://cmake.org/download) to download it.
+
+Additionally, the following libraries are downloaded and used while building the project:
+
+* The [tinyxml2](https://github.com/leethomason/tinyxml2) library for parsing scene files.
+
+* The [lodepng](https://github.com/lvandeve/lodepng) library for outputing PNG images.
+
+* The header-only [cxxopts](https://github.com/jarro2783/cxxopts) library for parsing command line arguments.
+
+
+# Quick Start
 
 Download the repository and its submodules by running
 
@@ -10,7 +23,6 @@ Download the repository and its submodules by running
 $ git clone --recurse-submodules https://github.com/cagries/simple-cpp-raytracer.git
 ```
 
-You need CMake (minimum version 3.2) to build the project. Head on to [cmake.org](https://cmake.org/download) to download it.
 
 To build the project, run the following commands from the project root directory:
 
@@ -74,3 +86,31 @@ The last step command assumes you are installing to a restricted directory. Assu
 
 * Public header files -> inside `/usr/local/include/raytracer/`
 
+### Components
+
+A minimal set of
+
+* Cameras, image planes, 3-dimensional vectors
+
+* Ambient lighting and point lights
+
+* An extendible `Surface` class, and basic derived `Sphere`, `Triangle` and `Mesh` classes.
+
+* Shading models
+    - Ambient shading
+    - Diffuse shading
+    - Blinn-Phong shading
+    
+* Shadows
+
+* Reflective surfaces and ideal specular reflection
+
+* Simple graphics data structures
+    - Indexed triangle meshes
+    - Basic bounding volume hierarchies
+
+are provided by the base library. Feel free to extend it in any way that you desire.
+
+## Contributing
+
+Contributions are very welcome! Check out the issue tracker and open pull requests for your changes.

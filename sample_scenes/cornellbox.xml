@@ -13,7 +13,7 @@
             <NearPlane>-10 10 -10 10</NearPlane>
             <NearDistance>10</NearDistance>
             <ImageResolution>480 480</ImageResolution>
-            <ImageName>cornellbox_front.ppm</ImageName>
+            <ImageName>cornellbox_front.png</ImageName>
         </Camera>
 
         <Camera id="2">
@@ -23,7 +23,7 @@
             <NearPlane>-10 10 -10 10</NearPlane>
             <NearDistance>10</NearDistance>
             <ImageResolution>800 800</ImageResolution>
-            <ImageName>cornellbox_inverse.ppm</ImageName>
+            <ImageName>cornellbox_inverse.png</ImageName>
         </Camera>
 
         <Camera id="3">
@@ -33,7 +33,7 @@
             <NearPlane>-10 10 -10 10</NearPlane>
             <NearDistance>10</NearDistance>
             <ImageResolution>800 800</ImageResolution>
-            <ImageName>cornellbox_top.ppm</ImageName>
+            <ImageName>cornellbox_top.png</ImageName>
         </Camera>
     </Cameras>
 

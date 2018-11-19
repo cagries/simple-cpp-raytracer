@@ -1,10 +1,10 @@
 # Find header files
-include_directories("${PROJECT_SOURCE_DIR}/include"
-    "${PROJECT_SOURCE_DIR}/src/lodepng"
-    "${PROJECT_SOURCE_DIR}/src/tinyxml2"
+include_directories("${RT_INCLUDE_DIR}"
+    "${RT_SOURCE_DIR}/lodepng"
+    "${RT_SOURCE_DIR}/tinyxml2"
+    "${RT_SOURCE_DIR}/cxxopts/include"
     )
 
-# Find lodepng header
 # Files to use for 'raytracer' (except the main file)
 set (RT_SOURCES "camera.cpp"
     "geometry.cpp"
@@ -15,8 +15,8 @@ set (RT_SOURCES "camera.cpp"
     "raytracer.cpp"
     "sphere.cpp"
     "triangle.cpp"
-    "${PROJECT_SOURCE_DIR}/src/lodepng/lodepng.cpp"
-    "${PROJECT_SOURCE_DIR}/src/tinyxml2/tinyxml2.cpp"
+    "${RT_SOURCE_DIR}/lodepng/lodepng.cpp"
+    "${RT_SOURCE_DIR}/tinyxml2/tinyxml2.cpp"
 )
 
 
