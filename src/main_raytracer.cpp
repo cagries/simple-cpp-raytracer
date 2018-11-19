@@ -44,7 +44,14 @@ int main(int argc, char** argv)
 
 
     // Initialize the ray tracer
-    rt::RayTracer tracer(argv[1]);
+    rt::RayTracer tracer;
+    try {
+        tracer.load_scene(argv[1]);
+    } catch (std::exception& e) {
+        std::cout << "[tinyxml2]: " << e.what() << std::endl;
+        return 1;
+    }
+
 
     // Get maximum image resolution
     int max = 0;
