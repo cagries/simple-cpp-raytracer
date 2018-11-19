@@ -29,24 +29,20 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/")
 
 # Create the library
 add_library (Raytracer ${RT_SOURCES})
+target_link_libraries(Raytracer pthread)
 
 # Create the main executable
 add_executable(raytracer "main_raytracer.cpp")
-
-
-target_link_libraries(Raytracer pthread)
-
 target_link_libraries(raytracer pthread Raytracer)
-
 
 # Installing the library and executable
 install(TARGETS Raytracer DESTINATION "lib/raytracer")
-
 install(TARGETS raytracer DESTINATION "bin")
 
 # Installing the header files 
 install(
     DIRECTORY "${PROJECT_SOURCE_DIR}/include/"
     DESTINATION "include/raytracer"
-    FILES_MATCHING PATTERN "*.h*")
+    FILES_MATCHING PATTERN "*.h*"
+)
 

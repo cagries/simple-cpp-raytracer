@@ -1,47 +1,37 @@
-#include "ppm.h"
+#include <fstream>
 #include <stdexcept>
+
+#include "ppm.h"
 
 namespace ppm {
 
-void write_ppm(const char* filename, unsigned char* data, unsigned int width, unsigned int height)
+void 
+write_ppm(const std::string& filename, const std::vector<unsigned char>& data,
+        unsigned int width, unsigned int height)
 {
-    FILE *outfile;
+    std::ofstream outfile {filename, std::ios_base::out};
 
-    if ((outfile = fopen(filename, "w")) == NULL) 
-    {
-        throw std::runtime_error("Error: The ppm file cannot be opened for writing.");
+    if (!outfile.is_open()) {
+        throw std::runtime_error("[ppm]: The ppm file cannot be opened for writing.");
     }
 
-    (void) fprintf(outfile, "P3\n%d %d\n255\n", width, height);
+    outfile << "P3" << '\n'
+            << width << " " << height << '\n'
+            << 255 << '\n';
 
-    unsigned char color;
-    for (size_t j = 0, idx = 0; j < height; ++j)
-    {
-        for (size_t i = 0; i < width; ++i)
-        {
-            for (size_t c = 0; c < 4; ++c, ++idx)
-            {
-                color = data[idx];
 
-                // Alpha not used in any variant of PPM
-                if (c == 3)
-                    continue;
-
-                if (i == width - 1 && c == 2)
-                {
-                    (void) fprintf(outfile, "%d", color);
-                }
-                else
-                {
-                    (void) fprintf(outfile, "%d ", color);
-                }
+    std::size_t index = 0;
+    for (std::size_t i = 0; i < height; i++) {
+        for (std::size_t j = 0; j < width; j++, index += 4) {
+            outfile << static_cast<int>(data[index]) << ' '
+                    << static_cast<int>(data[index + 1]) << ' '
+                    << static_cast<int>(data[index + 2]);
+            if (j != width - 1) {
+                outfile << ' ';
             }
         }
-
-        (void) fprintf(outfile, "\n");
+        outfile << '\n';
     }
-
-    (void) fclose(outfile);
 }
 
 } // namespace ppm
