@@ -134,7 +134,7 @@ Vec3f RayTracer::calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVe
     bool shadowHitFlag = false;
     for (const auto& surface : scene.surfaces) {
         if (surface.get()->hit(lightRay, &shadowRec)) {
-            shadowHitFlag = false;
+            shadowHitFlag = true;
         }
     }
     
