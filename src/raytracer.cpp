@@ -6,15 +6,9 @@
 
 namespace rt {
 
-
-RayTracer::RayTracer(const char* filename) {
+void RayTracer::load_scene(const char* filename) {
     scene.loadFromXml(filename);
 }
-
-// inline const std::vector<Camera>& RayTracer::get_cameras() const {
-//  return scene.cameras;
-// }
-
 
 void RayTracer::trace_helper(unsigned char *image, const Camera& c, int begin, int end, int index) const {
     int width = c.plane.width;
@@ -27,6 +21,7 @@ void RayTracer::trace_helper(unsigned char *image, const Camera& c, int begin, i
             image[index++] = pixelColor.x;
             image[index++] = pixelColor.y;
             image[index++] = pixelColor.z;
+            image[index++] = 0xff;          // Pixels are opaque.
         }
     }
 }
@@ -50,15 +45,24 @@ void RayTracer::rayTrace(unsigned char *image, const Camera& c) const {
     std::vector<std::thread> threads;
 
     constexpr int num_threads = 8;
-    // Call the threads
     int leap = static_cast<int>(height / num_threads);
-    int jump = static_cast<int>(3 * width * height / num_threads);
+    int jump = static_cast<int>(4 * width * height / num_threads);
 
+    // Call the threads
     for (int i = 0; i < num_threads; i++) {
         threads.push_back(
                 std::thread{
                     [this, image, c, leap, jump, i] {
                         trace_helper(image, c, i * leap, (i+1) * leap, i * jump);
+                    }});
+    }
+
+    // Open a final thread if height not divisible by num_threads
+    if (height % num_threads) {
+         threads.push_back(std::thread{
+                    [this, image, c, leap, jump, height] {
+                        trace_helper(image, c, leap * num_threads,
+                                height, jump * num_threads);
                     }});
     }
 
@@ -128,7 +132,7 @@ Vec3f RayTracer::calculateEachLight(HitRecord hr, PointLight light, Vec3f viewVe
     bool shadowHitFlag = false;
     for (const auto& surface : scene.surfaces) {
         if (surface.get()->hit(lightRay, &shadowRec)) {
-            shadowHitFlag = false;
+            shadowHitFlag = true;
         }
     }
     

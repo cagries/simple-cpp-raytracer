@@ -1,0 +1,9 @@
+[submodule "src/lodepng"]
+	path = src/lodepng
+	url = https://github.com/lvandeve/lodepng.git
+[submodule "src/tinyxml2"]
+	path = src/tinyxml2
+	url = https://github.com/leethomason/tinyxml2.git
+[submodule "src/cxxopts"]
+	path = src/cxxopts
+	url = https://github.com/jarro2783/cxxopts.git

@@ -17,8 +17,9 @@ namespace rt {
  */
 class RayTracer {
 public:
+    RayTracer() = default;
 
-    explicit RayTracer(const char* filename);
+    void load_scene(const char* filename);
     
     void rayTrace(unsigned char *image, const Camera& camera) const;
     Vec3f calculateColor(Ray r, Vec3f positionColor, int recursionLevel) const;
@@ -32,7 +33,8 @@ public:
     
 private:
     Scene scene;
-    void trace_helper(unsigned char *image, const Camera& camera, int begin, int end, int index) const;
+    void trace_helper(unsigned char *image, const Camera& camera,
+            int begin, int end, int index) const;
 };
 
 } // namespace rt
