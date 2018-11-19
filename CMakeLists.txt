@@ -4,6 +4,7 @@ project (Raytracer)
 # Version numbers
 set (Raytracer_VERSION_MAJOR 0)
 set (Raytracer_VERSION_MINOR 2)
+set (Raytracer_VERSION_PATCH 1)
 
 include(CTest)
 
