@@ -14,7 +14,7 @@
             <NearDistance>1</NearDistance>
             <ImageResolution>512 512</ImageResolution>
             <NumSamples>1</NumSamples>
-            <ImageName>bunny.ppm</ImageName>
+            <ImageName>bunny.png</ImageName>
         </Camera>
     </Cameras>
 

@@ -3,20 +3,55 @@
 #include <string>
 
 #include "raytracer.h"
+#include "RaytracerConfig.h"
 
 #include "lodepng.h"
 #include "ppm.h"
+#include "cxxopts.hpp"
 
 int main(int argc, char** argv)
 {
-    if (argc < 2) {
-        std::cerr << "Usage: raytracer <scene_file>" << std::endl;
+    // Take care of argument parsing
+    cxxopts::Options options("raytracer", "raytracer: A simple C++ ray tracer");
+    options.add_options()
+        ("v,version", "Print version")
+        ("h,help", "Print help message")
+        ;
+
+    try {
+        auto result = options.parse(argc, argv);
+
+        if (result["v"].as<bool>()) {
+            std::cout << "raytracer" <<  " version "
+                << Raytracer_VERSION_MAJOR << "."
+                << Raytracer_VERSION_MINOR << std::endl;
+            return 0;
+        } else if (result["h"].as<bool>()) {
+            std::cout << options.help() << std::endl;
+            return 0;
+        }
+    } catch (std::exception& e) {
+        // Unrecognized option
+        std::cout << "[raytracer]: " << e.what() << std::endl 
+                  << options.help() << std::endl;
         return 1;
     }
 
+    if (argc != 2) {
+        std::cout << "[raytracer]: no scene file provided" << std::endl;
+        return 1;
+    }
+
+
     // Initialize the ray tracer
-    rt::RayTracer tracer(argv[1]);
-    
+    rt::RayTracer tracer;
+    try {
+        tracer.load_scene(argv[1]);
+    } catch (std::exception& e) {
+        std::cout << "[tinyxml2]: " << e.what() << std::endl;
+        return 1;
+    }
+
 
     // Get maximum image resolution
     int max = 0;
@@ -45,7 +80,7 @@ int main(int argc, char** argv)
             // Write as a PNG file 
             auto error = lodepng::encode(filename, image, width, height);
             if (error) {
-                std::cout << "[lodepng] error" << error 
+                std::cout << "[lodepng] Error" << error 
                     << ": " << lodepng_error_text(error) 
                     << std::endl;
                 return 1;
@@ -55,7 +90,8 @@ int main(int argc, char** argv)
             ppm::write_ppm(filename, image, width, height);
         } else {
             // Unrecognized format
-            std::cout << "raytracer: not recognized output format" << std::endl;
+            std::cout << "[raytracer]: Output format not recognized. Outputting as PPM..." << std::endl;
+            ppm::write_ppm(filename + ".ppm", image, width ,height);
             return 1;
         }
     }

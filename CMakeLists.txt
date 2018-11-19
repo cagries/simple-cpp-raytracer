@@ -1,5 +1,9 @@
-cmake_minimum_required (VERSION 3.2)
+cmake_minimum_required (VERSION 3.0.2)
 project (Raytracer)
+
+# Version numbers
+set (Raytracer_VERSION_MAJOR 0)
+set (Raytracer_VERSION_MINOR 2)
 
 include(CTest)
 
@@ -43,7 +47,12 @@ if (RT_BUILD_TESTS)
     add_subdirectory("${PROJECT_SOURCE_DIR}/test")
 endif()
 
-### Google Test specific configuration ### 
+set(RT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/src")
+set(RT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
 
-add_subdirectory("${PROJECT_SOURCE_DIR}/src")
+configure_file(
+    "${RT_INCLUDE_DIR}/RaytracerConfig.h.in"
+    "${RT_INCLUDE_DIR}/RaytracerConfig.h"
+)
 
+add_subdirectory("${PROJECT_SOURCE_DIR}/src") 
