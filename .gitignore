@@ -5,14 +5,10 @@
 Makefile~
 *.ppm
 gmon.out
+__pycache__
 
 # Skip these directories. 
-test/
-
-# Skip these executables.
-
-main
-main_raytracer
-tracer
-example
-
+build/
+bin/
+lib/
+Testing/

@@ -1,10 +1,9 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "geometry.h"
 #include <string>
 #include <vector>
-
-#include "geometry.h"
 
 namespace rt {
 

@@ -9,7 +9,6 @@
 
 #include "geometry.h"
 
-
 namespace rt {
 
 /**
@@ -31,8 +30,16 @@ struct AmbientLight : Light {};
  */
 struct PointLight : Light {
     Vec3f position;
+
+    /**
+     * @brief   Returns a shadow ray from the light source to another point.
+     *
+     * @param x A point.
+     *
+     * @return  The product Ray.
+     */
+    Ray shadow_ray(Vec3f x);
 };
 
 } // namespace rt
-
 #endif // light.h

@@ -56,4 +56,3 @@ Ray Camera::generate_ray(int i, int j) const
 }
 
 } // namespace rt
-

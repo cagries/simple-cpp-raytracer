@@ -68,11 +68,8 @@ bool Sphere::hit(Ray ray, HitRecord* hr) const
 }
 
 
-/*
 Vec3f Sphere::normal(Vec3f p) const {
-    return (p - center) / radius;
+    return (p - center).normalize();
 }
-*/
 
 } // namespace rt
-

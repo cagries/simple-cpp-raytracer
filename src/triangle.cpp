@@ -75,5 +75,3 @@ bool Triangle::hit(Ray ray, HitRecord* rec) const {
 }
 
 } // namespace rt
-
-

@@ -18,7 +18,7 @@ struct HitRecord {
     Vec3f pos;    //! The point hit by the Ray.
     Vec3f normal; //! The surface normal for the Surface at \a pos.
     
-    constexpr HitRecord() : t{std::numeric_limits<float>::max()}, m{nullptr} {}
+    HitRecord() : t(std::numeric_limits<float>::max()), m{nullptr} {}
 };
 
 
@@ -30,7 +30,7 @@ struct HitRecord {
  * implement the pure virtual hit function.
  */
 struct Surface {
-    explicit Surface(Material *m) : material{m} {}
+    Surface(Material *m) : material{m} {}
 
     /**
      * @brief Returns true if the given Ray intersects the Surface. If it does, fills out the given HitRecord pointer.
@@ -41,6 +41,8 @@ struct Surface {
      * @return True if the ray hits the surface.
      */
     virtual bool hit(Ray ray, HitRecord* hr) const = 0;
+
+    // virtual Box bounding_box() const = 0;
     
     virtual ~Surface() = default;
 
@@ -106,9 +108,7 @@ struct Sphere : Surface {
      *
      * @return The surface normal.
      */
-    constexpr Vec3f normal(Vec3f pos) const {
-        return (pos - center) / radius;
-    }
+    Vec3f normal(Vec3f pos) const;
 };
 
 
