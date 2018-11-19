@@ -24,7 +24,8 @@ int main(int argc, char** argv)
         if (result["v"].as<bool>()) {
             std::cout << "raytracer" <<  " version "
                 << Raytracer_VERSION_MAJOR << "."
-                << Raytracer_VERSION_MINOR << std::endl;
+                << Raytracer_VERSION_MINOR << "."
+                << Raytracer_VERSION_PATCH << std::endl;
             return 0;
         } else if (result["h"].as<bool>()) {
             std::cout << options.help() << std::endl;

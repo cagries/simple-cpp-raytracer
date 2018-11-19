@@ -2,6 +2,8 @@
 
 This is a simple, MIT-licensed multi-threaded ray tracer written in C++14.
 
+![An example](https://raw.githubusercontent.com/cagries/simple-cpp-raytracer/master/sample_scenes/sample_outputs/mirror_spheres.png)
+
 ## Requirements
 
 `simple-cpp-raytracer` requires the CMake (version >= 3.0.2) build system. Head on to [cmake.org](https://cmake.org/download) to download it.
@@ -41,17 +43,9 @@ $ cd ../bin/
 $ ./raytracer <scene_file.xml>
 ```
 
-to generate `image_name.ppm`, where the image name is the name defined in the scene file. 
+to generate output images for each camera defined in the given scene file.
 
-An example set of scene files (in XML) can be found within the `scenes` folder. Scene files include: 
-
-- MaxRecursionDepth for limiting the number of reflections a view ray does
-
-- BackgroundColor to calculate the color when view ray doesn't hit a surface 
-
-- ShadowRayEpsilon for shifting the contact point when a ray hits a surface so that the reflecting/newly generated ray would not hit the same object. 
-
-Apart from that, scene files include one or more camera data, ambient light and point light parameters, materials and their associated materialID's, and finally scene geometry information which are sphere and triangle data and indexed triangle mesh data. 
+An example set of scene files (in XML) can be found within the `scenes` directory. Currently, exporting to the PNG and PPM formats is possible. You can specify the output file name and extension with the `<ImageName></ImageName>` tag.
 
 ## Testing
 
@@ -94,7 +88,7 @@ A minimal set of
 
 * Ambient lighting and point lights
 
-* An extendible `Surface` class, and basic derived `Sphere`, `Triangle` and `Mesh` classes.
+* An extensible abstract `Surface` class, and basic derived `Sphere`, `Triangle` and `Mesh` classes.
 
 * Shading models
     - Ambient shading
