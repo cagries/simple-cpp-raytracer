@@ -81,7 +81,7 @@ int main(int argc, char** argv)
             // Write as a PNG file 
             auto error = lodepng::encode(filename, image, width, height);
             if (error) {
-                std::cout << "[lodepng] Error" << error 
+                std::cout << "[lodepng] Error " << error 
                     << ": " << lodepng_error_text(error) 
                     << std::endl;
                 return 1;
