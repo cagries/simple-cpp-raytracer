@@ -6,11 +6,12 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 
+#include <cmath>
 
 namespace rt {
 
 /**
- * @brief 
+ * @brief Simple 3D vector class
  *
  * The Vec3f struct defines a three-dimensional point or vector inside R^{3}.
  */
@@ -19,19 +20,100 @@ struct Vec3f {
     float y;
     float z;
 
-    Vec3f& operator+=(const Vec3f& rhs);
+    /**
+     * @brief Addition of one vector to another vector.
+     *
+     * @param rhs Another vector
+     *
+     * @return The sum vector
+     */
+    constexpr Vec3f& operator+=(const Vec3f& rhs) {
+        x += rhs.x;
+        y += rhs.y;
+        z += rhs.z;
+        return *this;
+    }
 
-    Vec3f& operator-=(const Vec3f& rhs);
+    /**
+     * @brief Subtraction of one vector from another
+     *
+     * @param rhs Another vector
+     *
+     * @return The difference vector
+     */
+    constexpr Vec3f& operator-=(const Vec3f& rhs) {
+        x -= rhs.x;
+        y -= rhs.y;
+        z -= rhs.z;
+        return *this;
+    }
 
-    Vec3f(const Vec3f& rhs);
+    /**
+     * @brief Copy constructor
+     *
+     * @param rhs Copied vector
+     */
+    constexpr Vec3f(const Vec3f& rhs)
+        :x{rhs.x}, y{rhs.y}, z{rhs.z}
+    {}
 
-    Vec3f(Vec3f&& rhs);
+    /**
+     * @brief Move constructor
+     *
+     * @param rhs Moved vector
+     */
+    constexpr Vec3f(Vec3f&& rhs)
+        :x{rhs.x}, y{rhs.y}, z{rhs.z}
+    {}
 
-    Vec3f& operator=(const Vec3f& rhs);
+    /**
+     * @brief Copy assignment operator
+     *
+     * @param rhs Copied vector
+     *
+     * @return This vector
+     */
+    constexpr Vec3f& operator=(const Vec3f& rhs) {
+        x = rhs.x;
+        y = rhs.y;
+        z = rhs.z;
+        return *this;
+    }
 
-    Vec3f& operator=(Vec3f&& rhs);
+    /**
+     * @brief Move assignment operator
+     *
+     * @param rhs Moved vector
+     *
+     * @return This vector
+     */
+    constexpr Vec3f& operator=(Vec3f&& rhs) {
+        x = rhs.x;
+        y = rhs.y;
+        z = rhs.z;
+        return *this;
+    }
 
-    Vec3f(float x ={}, float y ={}, float z ={});
+    
+    /**
+     * @brief Default constructor
+     *
+     */
+    constexpr Vec3f() 
+        :x{}, y{}, z{}
+    {}
+
+    /**
+     * @brief Constructor
+     *
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param z z coordinate
+     *
+     */
+    constexpr Vec3f(float x, float y, float z)
+        :x{x}, y{y}, z{z}
+    {}
 
 
     /**
@@ -39,14 +121,23 @@ struct Vec3f {
      *
      * @return A unit vector in the same direction as this.
      */
-    Vec3f normalize() const;
+    Vec3f normalize() const {
+        float size = norm();
+        return  {x / size, y / size, z / size};
+    }
     
     /**
      * @brief Returns the norm.
      *
      * @return The norm (length) of this vector.
+     *
+     * @note std::sqrt() is not constexpr in the standard, so
+     * this may fail.
+     *
      */
-    float norm() const;
+    float norm() const {
+        return std::sqrt(x*x + y*y + z*z);
+    }
 
 
     /**
@@ -56,14 +147,45 @@ struct Vec3f {
      *
      * @return The element-wise product of the two vectors.
      */
-    Vec3f times(const Vec3f& rhs) const;
+    constexpr Vec3f times(const Vec3f& rhs) const {
+        return {x*rhs.x, y*rhs.y, z*rhs.z};
+    }
 };
 
-Vec3f operator+(Vec3f lhs, Vec3f rhs);
+/**
+ * @brief Adds two vectors.
+ *
+ * @param lhs A vector.
+ * @param rhs Another vector.
+ *
+ * @return The sum vector.
+ */
+constexpr Vec3f operator+(Vec3f lhs, Vec3f rhs) {
+    return lhs += rhs;
+}
 
-Vec3f operator-(Vec3f lhs, Vec3f rhs);
+/**
+ * @brief Subtracts two vectors.
+ *
+ * @param lhs A vector.
+ * @param rhs Another vector.
+ *
+ * @return The difference vector.
+ */
+constexpr Vec3f operator-(Vec3f lhs, Vec3f rhs) {
+    return lhs -= rhs;
+}
 
-Vec3f operator-(Vec3f v);
+/**
+ * @brief Unary negation operator.
+ *
+ * @param v A vector
+ *
+ * @return -v
+ */
+constexpr Vec3f operator-(Vec3f v) {
+    return {-v.x, -v.y, -v.z};
+}
 
 
 /**
@@ -74,7 +196,9 @@ Vec3f operator-(Vec3f v);
  *
  * @return The dot product (lhs . rhs).
  */
-float operator*(Vec3f lhs, Vec3f rhs);
+constexpr float operator*(Vec3f lhs, Vec3f rhs) {
+    return lhs.x*rhs.x + lhs.y*rhs.y + lhs.z*rhs.z;
+}
 
 
 /**
@@ -85,9 +209,22 @@ float operator*(Vec3f lhs, Vec3f rhs);
  *
  * @return      The product t(rhs).
  */
-Vec3f operator*(float t, Vec3f rhs);
+constexpr Vec3f operator*(float t, Vec3f rhs) {
+    return {t * rhs.x, t * rhs.y, t * rhs.z};
+}
 
-Vec3f operator/(Vec3f lhs, float divisor);
+/**
+ * @brief Scalar division
+ *
+ * @param lhs A vector.
+ * @param divisor A scalar value
+ *
+ * @return lhs / divisor
+ */
+constexpr Vec3f operator/(Vec3f lhs, float divisor) {
+    return {lhs.x / divisor, lhs.y / divisor, lhs.z / divisor};
+}
+
 
 /**
  * @brief The Ray function object.
@@ -100,13 +237,32 @@ struct Ray {
     Vec3f d;    //! The direction of the ray
 
     /**
+     * @brief Default constuctor
+     *
+     */
+    constexpr Ray() = default;
+
+    /**
+     * @brief Constructor.
+     *
+     * @param e The origin point.
+     * @param d The direction vector.
+     *
+     */
+    constexpr Ray(Vec3f e, Vec3f d)
+        :e{e}, d{d}
+    {}
+
+    /**
      * @brief Computes the ray's location given the parameter \a t.
      *
      * @param t     The parameter.
      *
      * @return The ray's calculated position.
      */
-    Vec3f operator()(float t) const;
+    constexpr Vec3f operator()(float t) const {
+        return e + t * d; 
+    }
 };
 
 
@@ -127,7 +283,14 @@ struct Vec4f {
  *
  * @return  The cross product (this x rhs). 
  */
-Vec3f cross(Vec3f a, Vec3f b); 
+constexpr Vec3f cross(Vec3f a, Vec3f b) {
+    return {
+        a.y * b.z - a.z * b.y,
+        a.z * b.x - a.x * b.z,
+        a.x * b.y - a.y * b.x
+    };
+}
+
 } // namespace rt 
 
 #endif // geometry.h

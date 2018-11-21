@@ -7,7 +7,6 @@ include_directories("${RT_INCLUDE_DIR}"
 
 # Files to use for 'raytracer' (except the main file)
 set (RT_SOURCES "camera.cpp"
-    "geometry.cpp"
     "light.cpp"
     "mesh.cpp"
     "parser.cpp"
