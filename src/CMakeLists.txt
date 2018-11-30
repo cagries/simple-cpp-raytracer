@@ -1,10 +1,10 @@
-# Find header files
+
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   # using regular Clang or AppleClang, use libc++
   set (CMAKE_CXX_FLAGS "-stdlib=libc++" ${CMAKE_CXX_FLAGS})
 endif()
 
-
+# Find header files
 include_directories("${RT_INCLUDE_DIR}"
     "${RT_SOURCE_DIR}/lodepng"
     "${RT_SOURCE_DIR}/tinyxml2"
@@ -32,12 +32,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Werror -Wpedantic -O3 
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib/")
 
 # Create the library
-# add_library (Raytracer ${RT_SOURCES})
-# target_link_libraries(Raytracer pthread)
-
-# Create the main executable
-add_executable(raytracer "main_raytracer.cpp" ${RT_SOURCES})
-target_link_libraries(raytracer pthread)
+add_library (Raytracer ${RT_SOURCES})
+target_link_libraries(Raytracer pthread)
 
 # Installing the library and executable
 install(TARGETS Raytracer DESTINATION "lib/raytracer")

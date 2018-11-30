@@ -1,4 +1,4 @@
-## Find header files
+# Find required header files
 include_directories("${PROJECT_SOURCE_DIR}/include")
 include_directories("${PROJECT_SOURCE_DIR}/src/lodepng")
 include_directories("${PROJECT_SOURCE_DIR}/src/tinyxml2")

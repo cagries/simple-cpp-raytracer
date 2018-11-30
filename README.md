@@ -1,5 +1,7 @@
 # simple-cpp-raytracer
 
+[![Build Status](https://travis-ci.com/cagries/simple-cpp-raytracer.svg?branch=master)](https://travis-ci.com/cagries/simple-cpp-raytracer)
+
 This is a simple, MIT-licensed multi-threaded ray tracer written in C++14.
 
 ![An example](https://raw.githubusercontent.com/cagries/simple-cpp-raytracer/master/sample_scenes/sample_outputs/mirror_spheres.png)
@@ -45,7 +47,7 @@ $ ./raytracer <scene_file.xml>
 
 to generate output images for each camera defined in the given scene file.
 
-An example set of scene files (in XML) can be found within the `scenes` directory. Currently, exporting to the PNG and PPM formats is possible. You can specify the output file name and extension with the `<ImageName></ImageName>` tag.
+An example set of scene files (in XML) can be found within the `scenes` directory. Currently, exporting to the PNG and PPM formats is possible. You can specify the output file name and extension with the `<ImageName></ImageName>` tag inside the XML scene file.
 
 ## Testing
 
@@ -107,4 +109,4 @@ are provided by the base library. Feel free to extend it in any way that you des
 
 ## Contributing
 
-Contributions are very welcome! Check out the issue tracker and open pull requests for your changes.
+Contributions are very welcome! Check out the issue tracker and feel free to open pull requests for your changes.
