@@ -1,0 +1,37 @@
+# Version 0.1
+
+language: cpp
+sudo: required
+
+matrix:
+    include:
+        # Linux build, with gcc
+        - os: linux
+          dist: trusty
+          compiler: gcc
+          addons:
+              apt:
+                  sources:
+                      - ubuntu-toolchain-r-test
+                  packages:
+                      - g++-7
+          env:
+              - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+
+        # Clang based build for OSX
+        - os: osx
+          compiler: clang
+          osx_image: xcode9.4
+          env:
+              - MATRIX_EVAL="CC=clang && CXX=clang++"
+
+
+
+before_install:
+    - eval "${MATRIX_EVAL}"
+
+script:
+    - ${CXX} --version
+    - cd build
+    - cmake ../;
+    - VERBOSE=1 make;

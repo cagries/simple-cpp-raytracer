@@ -9,6 +9,5 @@ __pycache__
 
 # Skip these directories. 
 build/
-bin/
 lib/
 Testing/
