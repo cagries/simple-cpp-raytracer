@@ -33,5 +33,5 @@ before_install:
 script:
     - ${CXX} --version
     - cd build
-    - cmake ../;
-    - VERBOSE=1 make;
+    - cmake -DRT_BUILD_TESTS=1 ../;
+    - VERBOSE=1 make && make test && sudo make install;
