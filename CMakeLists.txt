@@ -3,8 +3,8 @@ project (Raytracer)
 
 # Version numbers
 set (Raytracer_VERSION_MAJOR 0)
-set (Raytracer_VERSION_MINOR 2)
-set (Raytracer_VERSION_PATCH 1)
+set (Raytracer_VERSION_MINOR 3)
+set (Raytracer_VERSION_PATCH 0)
 
 include(CTest)
 
@@ -57,3 +57,4 @@ configure_file(
 )
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/src") 
+add_subdirectory("${PROJECT_SOURCE_DIR}/bin") 
