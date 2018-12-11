@@ -42,7 +42,7 @@ Camera::Camera(Vec3f pos, Vec3f gaze, Vec3f up, ImagePlane plane)
  * @param i Right coordinate
  * @param j Up coordinate
  *
- * @return 
+ * @return  Ray passing through pixel (i,j).
  */
 Ray Camera::generate_ray(int i, int j) const
 {
