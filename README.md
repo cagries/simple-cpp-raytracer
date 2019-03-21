@@ -2,7 +2,11 @@
 
 [![Build Status](https://travis-ci.com/cagries/simple-cpp-raytracer.svg?branch=master)](https://travis-ci.com/cagries/simple-cpp-raytracer)
 
+Authors: Doruk Coşkun (/Doruk-Coskun) & Çağrı Eser (/cagries)
+
 This is a simple, MIT-licensed multi-threaded ray tracer written in C++14.
+
+![dragon-lowres](https://raw.githubusercontent.com/cagries/simple-cpp-raytracer/master/sample_scenes/sample_outputs/dragon_lowres.png)
 
 ![An example](https://raw.githubusercontent.com/cagries/simple-cpp-raytracer/master/sample_scenes/sample_outputs/mirror_spheres.png)
 
@@ -103,10 +107,16 @@ A minimal set of
 
 * Simple graphics data structures
     - Indexed triangle meshes
-    - Basic bounding volume hierarchies
+    - Basic bounding box
 
 are provided by the base library. Feel free to extend it in any way that you desire.
 
 ## Contributing
 
 Contributions are very welcome! Check out the issue tracker and feel free to open pull requests for your changes.
+
+# Other Examples
+
+![An example](https://raw.githubusercontent.com/cagries/simple-cpp-raytracer/master/sample_scenes/sample_outputs/cornellbox_front.png)
+
+![An example](https://raw.githubusercontent.com/cagries/simple-cpp-raytracer/master/sample_scenes/sample_outputs/simple_reflectance.png)
